@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: questack
+
+  datasource:
+    url: jdbc:h2:mem:questack
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
+github:
+  token: ${GITHUB_TOKEN:}
+  api-base-url: https://api.github.com
+  search-repositories-path: /search/repositories
