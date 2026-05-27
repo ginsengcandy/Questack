@@ -15,13 +15,13 @@ Implemented:
 - GitHub Search API repository collection
 - Normalized source and collected item model
 - Duplicate prevention by canonical URL
+- Keyword-based backend relevance ranking
 - Manual collection endpoint for local verification
 - Technical decision and troubleshooting logs under `docs/`
 
 Planned:
 
 - RSS/technical blog collectors
-- Backend relevance ranking
 - Daily Top 3 briefing generation
 - Mini-project quest generation with `TODO-STUDENT` sections
 - Replay harness for fixture-based collector tests
@@ -48,6 +48,8 @@ HTTP Request
   -> GithubSearchClient
   -> GitHub Search API
   -> CollectedItem persistence
+  -> RankingService
+  -> RankingScore persistence
 ```
 
 The first data model is deliberately small:
@@ -64,7 +66,7 @@ CollectedItem
 RankingScore
 ```
 
-`RankingScore` exists even though ranking logic is not implemented yet. It keeps the collection model separate from scoring so that ranking rules can be recalculated without rewriting collected source data.
+`RankingScore` is separated from `CollectedItem` so ranking rules can evolve without rewriting collected source data.
 
 ## Package Structure
 
@@ -87,6 +89,8 @@ src/main/java/com/questack
   ranking/
     RankingScore.java
     RankingScoreRepository.java
+    api/
+    service/
   source/
     Source.java
     SourceRepository.java
@@ -224,6 +228,48 @@ Response:
 
 The endpoint intentionally does not use an `/api` prefix. Questack keeps endpoint paths short while the project is still backend-only and internally consumed.
 
+### Rank Collected Items
+
+```http
+POST /rankings
+```
+
+Scores collected items that do not have a ranking yet.
+
+Response:
+
+```json
+{
+  "candidateCount": 10,
+  "scoredCount": 10,
+  "skippedAlreadyScoredCount": 0
+}
+```
+
+### Read Top Rankings
+
+```http
+GET /rankings/top?limit=3
+```
+
+Response:
+
+```json
+[
+  {
+    "rankingScoreId": 1,
+    "collectedItemId": 1,
+    "title": "example/project",
+    "canonicalUrl": "https://github.com/example/project",
+    "backendRelevanceScore": 8,
+    "learningValueScore": 5,
+    "implementationValueScore": 5,
+    "totalScore": 18,
+    "reasons": "Java/JVM relevance, Spring backend relevance"
+  }
+]
+```
+
 ## Documentation
 
 Project notes are kept in append-only logs:
@@ -236,19 +282,28 @@ Planning documents:
 - `docs/roadmap/2-week-workflow.md`
 - `docs/sources/source-candidates.md`
 
+Generated API snippets:
+
+- `src/docs/api-docs`
+
+Run `./gradlew test` to regenerate MockMvc Spring REST Docs snippets.
+
 Key current decisions:
 
 - Start with GitHub Search and curated technical blogs before social platforms.
 - Normalize all external content into `CollectedItem`.
 - Keep ranking in a separate `RankingScore` model.
+- Start ranking with deterministic keyword rules before LLM-based summarization.
 - Use Spring `RestClient` for simple synchronous external HTTP calls.
 - Keep GitHub collector code grouped by feature and separated internally by role.
+- Keep controller behavior covered by MockMvc REST Docs tests.
 
 ## Development Principles
 
 - Build the collector pipeline before adding summarization.
 - Prefer explicit service boundaries over hidden persistence access.
 - Keep external API DTOs separate from internal response DTOs.
+- Add or update MockMvc REST Docs tests whenever controller methods are added or changed.
 - Record meaningful technical decisions and troubleshooting notes as the project evolves.
 - Treat API calls, LLM calls, and crawling as budgeted resources rather than unlimited utilities.
 
@@ -256,7 +311,6 @@ Key current decisions:
 
 Near-term:
 
-- Add backend relevance ranking rules.
 - Generate Top 3 daily briefing Markdown.
 - Add RSS collectors for selected technical blogs.
 - Add fixture replay tests for GitHub collection.

@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http --form POST 'http://localhost:8080/collections/github?query=language:Java%20topic:spring-boot%20stars:%3E%3D100%20fork:false&perPage=3'
+----

@@ -61,3 +61,23 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** `RestTemplate` (레거시 성격이 강하고 신규 코드에서 선호도가 낮음), `WebClient` (비동기/리액티브 흐름이 필요할 때 강하지만 현재 MVP에는 과함), Java 표준 `HttpClient` (Spring의 message converter와 설정 통합을 직접 챙겨야 함), GitHub CLI 호출 (애플리케이션 내부 HTTP 연동 역량을 보여주기 어려움)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/collection/github/client/GithubSearchClient.java`
+
+## TD-007 / 2026-05-26: 초기 랭킹은 결정론적 키워드 규칙으로 구현
+
+**결정 내용:** Questack의 첫 랭킹 로직은 LLM 호출 없이 Java, Spring, JPA, Redis, Kafka, OAuth, JWT, RAG, LLM 같은 긍정 키워드와 frontend, robotics, battery, semiconductor 같은 제외 키워드를 기반으로 점수화한다. 점수는 백엔드 적합도, 학습 가치, 구현 가치로 나누어 `RankingScore`에 저장한다.
+
+**이유 / 배경:** MVP 단계에서는 수집된 항목이 왜 상위에 올랐는지 설명 가능해야 하고, 외부 LLM 호출 비용과 지연 시간을 먼저 늘릴 필요가 없다. 키워드 규칙은 단순하지만 재현 가능하고 테스트하기 쉬우며, 나중에 LLM 요약이나 임베딩 기반 랭킹을 붙이더라도 1차 필터로 계속 사용할 수 있다.
+
+**대안으로 고려했던 것:** LLM으로 모든 수집 항목을 즉시 평가하는 방식 (품질은 기대할 수 있지만 비용과 재현성 문제가 큼), GitHub star 수만으로 정렬하는 방식 (인기도는 볼 수 있지만 백엔드 취업 적합도를 반영하기 어려움), 수집 시점에 바로 점수를 계산하는 방식 (수집과 랭킹의 관심사가 섞이고 규칙 재계산이 불편함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/ranking/service/RankingService.java`, `src/main/java/com/questack/ranking/service/KeywordScoreRule.java`, `src/main/java/com/questack/ranking/api/RankingController.java`, `src/main/java/com/questack/ranking/RankingScore.java`, `README.md`
+
+## TD-008 / 2026-05-26: 컨트롤러 변경은 MockMvc REST Docs 테스트로 고정
+
+**결정 내용:** 앞으로 컨트롤러 메서드를 추가하거나 변경할 때는 MockMvc 기반 컨트롤러 테스트를 함께 작성하거나 수정한다. 테스트는 Spring REST Docs를 사용해 요청 파라미터와 응답 필드를 문서화하고, 생성 스니펫은 `src/docs/api-docs` 아래에 둔다.
+
+**이유 / 배경:** Questack은 수집, 랭킹, 브리핑처럼 외부에서 호출 가능한 API가 점차 늘어날 예정이다. 컨트롤러 테스트를 API 문서 생성과 묶으면 엔드포인트 경로, 파라미터, 응답 형태 변경을 테스트에서 바로 감지할 수 있고, README와 실제 API가 어긋나는 일을 줄일 수 있다. MockMvc를 사용하면 실제 서버를 띄우지 않고도 MVC layer를 빠르게 검증할 수 있다.
+
+**대안으로 고려했던 것:** README에 수동으로 API 예시만 유지하는 방식 (구현과 문서가 쉽게 불일치함), 전체 통합 테스트만 사용하는 방식 (느리고 컨트롤러 계약 변화가 덜 선명함), OpenAPI부터 도입하는 방식 (좋은 선택지지만 현재 MVP에는 설정 범위가 큼)
+
+**영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/docs/api-docs/README.md`

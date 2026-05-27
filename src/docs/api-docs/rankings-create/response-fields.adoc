@@ -1,0 +1,16 @@
+|===
+|Path|Type|Description
+
+|`+candidateCount+`
+|`+Number+`
+|Number of collected items considered for ranking.
+
+|`+scoredCount+`
+|`+Number+`
+|Number of collected items newly scored.
+
+|`+skippedAlreadyScoredCount+`
+|`+Number+`
+|Number of collected items skipped because they already had a ranking score.
+
+|===

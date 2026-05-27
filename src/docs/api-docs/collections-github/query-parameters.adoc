@@ -1,0 +1,10 @@
+|===
+|Parameter|Description
+
+|`+query+`
+|GitHub repository search query.
+
+|`+perPage+`
+|Number of repositories to fetch. Accepted range is 1 to 30.
+
+|===

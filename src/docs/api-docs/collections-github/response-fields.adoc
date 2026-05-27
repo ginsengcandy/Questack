@@ -1,0 +1,16 @@
+|===
+|Path|Type|Description
+
+|`+fetchedCount+`
+|`+Number+`
+|Number of repositories fetched from GitHub.
+
+|`+savedCount+`
+|`+Number+`
+|Number of newly saved collected items.
+
+|`+skippedDuplicateCount+`
+|`+Number+`
+|Number of repositories skipped because their canonical URL already exists.
+
+|===
