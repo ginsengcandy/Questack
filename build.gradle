@@ -35,4 +35,26 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	dependsOn 'verifyProjectHarness'
+}
+
+tasks.register('verifyProjectHarness') {
+	group = 'verification'
+	description = 'Verifies Questack project harness rules.'
+
+	doLast {
+		if (file('src/docs').exists()) {
+			throw new GradleException('Generated documentation must live under docs/, not src/docs/.')
+		}
+
+		def restDocsPathOffenders = fileTree('src/test/java') {
+			include '**/*.java'
+		}.files.findAll { file ->
+			file.text.contains('src/docs/api-docs')
+		}
+
+		if (!restDocsPathOffenders.isEmpty()) {
+			throw new GradleException("REST Docs outputDir must be docs/api-docs: ${restDocsPathOffenders}")
+		}
+	}
 }
