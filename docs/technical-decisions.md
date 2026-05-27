@@ -84,7 +84,7 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 ## TD-009 / 2026-05-27: 일일 브리핑은 한국어 Markdown 파일로 먼저 생성
 
-**결정 내용:** Top 3 랭킹 결과를 기반으로 한국어 데일리 브리핑을 생성하고, 초기 MVP에서는 DB 테이블이 아니라 `docs/daily-briefings/{date}.md` 파일로 저장한다. 브리핑 포맷은 `Source`, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea` 섹션을 고정한다. 저장소에는 생성 결과 예시를 보여주기 위해 `docs/daily-briefings/(sample)-2026-05-27.md` 샘플 파일을 포함한다.
+**결정 내용:** Top 3 랭킹 결과를 기반으로 한국어 데일리 브리핑을 생성하고, 초기 MVP에서는 DB 테이블이 아니라 `docs/daily-briefings/{date}.md` 파일로 저장한다. 브리핑 포맷은 `Source`, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea` 섹션을 고정한다. 저장소에는 생성 결과 예시를 보여주기 위해 `docs/samples/daily-briefings/(sample)-2026-05-27.md` 샘플 파일을 포함한다.
 
 **이유 / 배경:** Questack의 핵심 가치는 수집과 랭킹 결과를 실제 학습 행동으로 변환하는 것이다. Markdown 파일은 Git으로 변경 이력을 남기기 쉽고, 블로그 초안이나 학습 기록으로 바로 재사용할 수 있다. 또한 DB 스키마를 먼저 확장하기보다 출력 포맷을 고정하면 사용자가 어떤 정보가 유용한지 빠르게 피드백할 수 있다.
 
@@ -111,3 +111,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 기능 하나를 한 커밋에 모두 담는 방식 (초기 속도는 빠르지만 변경 추적과 리뷰가 어려움), 파일 하나마다 커밋하는 방식 (너무 세분화되어 기능 흐름이 끊김), PR 없이 main에 직접 누적하는 방식 (검토와 기록이 약해짐)
 
 **영향받는 문서 / 파일:** `README.md`
+
+## TD-012 / 2026-05-28: 작업 하네스 단일 진입점과 검증 태스크 도입
+
+**결정 내용:** 작업 전 참조할 규칙을 `docs/working-guidelines.md`로 모으고, 생성 문서와 샘플 산출물 위치를 `docs` 아래로 명확히 분리한다. 또한 Gradle에 `verifyProjectHarness` 태스크를 추가해 `src/docs` 생성과 REST Docs 출력 경로 회귀를 감지한다.
+
+**이유 / 배경:** README, 기술 의사결정, 트러블슈팅, API docs에 규칙이 흩어지면 작업 전 어떤 문서를 봐야 하는지 불명확해진다. 하네스 규칙을 단일 문서로 모으면 사람과 AI가 같은 기준으로 작업을 시작할 수 있고, 반복적으로 놓치기 쉬운 경로 규칙은 자동 검증으로 막을 수 있다.
+
+**대안으로 고려했던 것:** README에 모든 규칙을 계속 누적하는 방식 (README가 비대해지고 사용자용 문서와 개발용 규칙이 섞임), 기술 의사결정 파일에만 기록하는 방식 (결정 기록과 실행 체크리스트의 역할이 섞임), 구두 규칙으로만 유지하는 방식 (누락 가능성이 큼)
+
+**영향받는 문서 / 파일:** `docs/working-guidelines.md`, `README.md`, `build.gradle`, `docs/samples/daily-briefings/(sample)-2026-05-27.md`

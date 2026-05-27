@@ -305,6 +305,7 @@ Response:
 
 Project notes are kept in append-only logs:
 
+- `docs/working-guidelines.md`
 - `docs/technical-decisions.md`
 - `docs/troubleshooting.md`
 
@@ -319,6 +320,10 @@ Generated API snippets:
 
 Run `./gradlew test` to regenerate MockMvc Spring REST Docs snippets.
 
+Sample output artifacts:
+
+- `docs/samples`
+
 Key current decisions:
 
 - Start with GitHub Search and curated technical blogs before social platforms.
@@ -332,6 +337,7 @@ Key current decisions:
 
 ## Development Principles
 
+- Check `docs/working-guidelines.md` before making project changes.
 - Build the collector pipeline before adding summarization.
 - Prefer explicit service boundaries over hidden persistence access.
 - Keep external API DTOs separate from internal response DTOs.
@@ -341,26 +347,7 @@ Key current decisions:
 
 ## Commit Guidelines
 
-PRs should stay feature-oriented, but commits should be split by reviewable intent.
-
-Recommended commit boundaries:
-
-- `feat`: domain/configuration, service logic, or API behavior changes
-- `test`: controller, service, fixture, harness, or REST Docs test changes
-- `docs`: README, technical decisions, troubleshooting, API snippets, sample outputs
-- `refactor`: package moves, path changes, naming changes, or structure-only changes
-- `fix`: bug fixes or behavior corrections
-- `chore`: build, dependency, or repository maintenance
-
-Rules:
-
-- Keep each commit explainable with one sentence.
-- Keep each commit buildable whenever practical.
-- Put controller changes and their MockMvc REST Docs tests in the same commit unless the test harness itself is being introduced separately.
-- Put generated sample artifacts in a separate `docs:` commit when they are not required for runtime behavior.
-- Keep path moves and package restructuring in a separate `refactor:` commit when possible.
-- Technical decisions should be committed with the first code or documentation change that reflects the decision.
-- Troubleshooting entries should be committed with the fix or workflow adjustment that resolves the issue.
+PRs stay feature-oriented, but commits are split by reviewable intent. See `docs/working-guidelines.md` for the detailed commit boundaries and pre-commit checklist.
 
 ## Roadmap
 
