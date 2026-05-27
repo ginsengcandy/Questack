@@ -1,0 +1,8 @@
+[source,json,options="nowrap"]
+----
+{
+  "candidateCount" : 5,
+  "scoredCount" : 3,
+  "skippedAlreadyScoredCount" : 2
+}
+----

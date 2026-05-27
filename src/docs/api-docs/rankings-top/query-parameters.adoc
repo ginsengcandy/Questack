@@ -1,0 +1,7 @@
+|===
+|Parameter|Description
+
+|`+limit+`
+|Maximum number of ranking results to return. Accepted range is 1 to 10.
+
+|===

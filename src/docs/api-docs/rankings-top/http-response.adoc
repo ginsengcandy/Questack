@@ -1,0 +1,18 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 369
+
+[ {
+  "rankingScoreId" : 1,
+  "collectedItemId" : 10,
+  "title" : "spring-ai-rag-service",
+  "canonicalUrl" : "https://github.com/example/spring-ai-rag-service",
+  "backendRelevanceScore" : 12,
+  "learningValueScore" : 9,
+  "implementationValueScore" : 9,
+  "totalScore" : 30,
+  "reasons" : "Java/JVM relevance, Spring backend relevance, AI backend retrieval topic"
+} ]
+----

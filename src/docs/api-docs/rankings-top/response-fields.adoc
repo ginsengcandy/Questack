@@ -1,0 +1,40 @@
+|===
+|Path|Type|Description
+
+|`+[].rankingScoreId+`
+|`+Number+`
+|Ranking score identifier.
+
+|`+[].collectedItemId+`
+|`+Number+`
+|Collected item identifier.
+
+|`+[].title+`
+|`+String+`
+|Collected item title.
+
+|`+[].canonicalUrl+`
+|`+String+`
+|Canonical URL of the collected item.
+
+|`+[].backendRelevanceScore+`
+|`+Number+`
+|Score for backend career relevance.
+
+|`+[].learningValueScore+`
+|`+Number+`
+|Score for learning value.
+
+|`+[].implementationValueScore+`
+|`+Number+`
+|Score for hands-on implementation value.
+
+|`+[].totalScore+`
+|`+Number+`
+|Sum of ranking score dimensions.
+
+|`+[].reasons+`
+|`+String+`
+|Human-readable reasons produced by ranking rules.
+
+|===
