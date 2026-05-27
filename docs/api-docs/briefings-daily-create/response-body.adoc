@@ -1,0 +1,9 @@
+[source,json,options="nowrap"]
+----
+{
+  "briefingDate" : "2026-05-27",
+  "filePath" : "docs/daily-briefings/2026-05-27.md",
+  "itemCount" : 3,
+  "markdown" : "# 데일리 브리핑: 2026-05-27\n"
+}
+----

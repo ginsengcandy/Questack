@@ -16,13 +16,13 @@ Implemented:
 - Normalized source and collected item model
 - Duplicate prevention by canonical URL
 - Keyword-based backend relevance ranking
+- Korean daily briefing Markdown generation from Top 3 rankings
 - Manual collection endpoint for local verification
 - Technical decision and troubleshooting logs under `docs/`
 
 Planned:
 
 - RSS/technical blog collectors
-- Daily Top 3 briefing generation
 - Mini-project quest generation with `TODO-STUDENT` sections
 - Replay harness for fixture-based collector tests
 - Cost and rate-limit guardrails
@@ -50,6 +50,8 @@ HTTP Request
   -> CollectedItem persistence
   -> RankingService
   -> RankingScore persistence
+  -> DailyBriefingService
+  -> Korean Markdown briefing file
 ```
 
 The first data model is deliberately small:
@@ -90,6 +92,10 @@ src/main/java/com/questack
     RankingScore.java
     RankingScoreRepository.java
     api/
+    service/
+  briefing/
+    api/
+    config/
     service/
   source/
     Source.java
@@ -193,6 +199,9 @@ github:
   token: ${GITHUB_TOKEN:}
   api-base-url: https://api.github.com
   search-repositories-path: /search/repositories
+
+briefing:
+  output-directory: docs/daily-briefings
 ```
 
 Notes:
@@ -200,6 +209,8 @@ Notes:
 - H2 is used for the MVP to keep local iteration fast.
 - `open-in-view` is disabled to keep persistence access inside explicit service boundaries.
 - GitHub collection is triggered manually for now. Scheduling will be added after ranking and replay tests are in place.
+- Daily briefing Markdown files are written under `docs/daily-briefings` by default.
+- `docs/daily-briefings/(sample)-2026-05-27.md` is a committed sample output file, not the default runtime filename.
 
 ## API
 
@@ -270,6 +281,26 @@ Response:
 ]
 ```
 
+### Generate Daily Briefing
+
+```http
+POST /briefings/daily?date=2026-05-27
+```
+
+Generates a Korean Markdown briefing from the current Top 3 rankings and writes it to `docs/daily-briefings/{date}.md`.
+The repository includes `docs/daily-briefings/(sample)-2026-05-27.md` only as a sample output artifact.
+
+Response:
+
+```json
+{
+  "briefingDate": "2026-05-27",
+  "filePath": "docs/daily-briefings/2026-05-27.md",
+  "itemCount": 3,
+  "markdown": "# 데일리 브리핑: 2026-05-27\n..."
+}
+```
+
 ## Documentation
 
 Project notes are kept in append-only logs:
@@ -284,7 +315,7 @@ Planning documents:
 
 Generated API snippets:
 
-- `src/docs/api-docs`
+- `docs/api-docs`
 
 Run `./gradlew test` to regenerate MockMvc Spring REST Docs snippets.
 
@@ -294,6 +325,7 @@ Key current decisions:
 - Normalize all external content into `CollectedItem`.
 - Keep ranking in a separate `RankingScore` model.
 - Start ranking with deterministic keyword rules before LLM-based summarization.
+- Generate daily briefings as Markdown files before introducing a separate briefing table.
 - Use Spring `RestClient` for simple synchronous external HTTP calls.
 - Keep GitHub collector code grouped by feature and separated internally by role.
 - Keep controller behavior covered by MockMvc REST Docs tests.
@@ -311,7 +343,6 @@ Key current decisions:
 
 Near-term:
 
-- Generate Top 3 daily briefing Markdown.
 - Add RSS collectors for selected technical blogs.
 - Add fixture replay tests for GitHub collection.
 

@@ -1,0 +1,20 @@
+|===
+|Path|Type|Description
+
+|`+briefingDate+`
+|`+String+`
+|Date used to generate the daily briefing.
+
+|`+filePath+`
+|`+String+`
+|Markdown file path written by the server.
+
+|`+itemCount+`
+|`+Number+`
+|Number of ranking items included in the briefing.
+
+|`+markdown+`
+|`+String+`
+|Generated Korean Markdown briefing content.
+
+|===

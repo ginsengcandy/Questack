@@ -26,7 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(RankingController.class)
-@AutoConfigureRestDocs(outputDir = "src/docs/api-docs")
+@AutoConfigureRestDocs(outputDir = "docs/api-docs")
 class RankingControllerTest {
 
     @Autowired

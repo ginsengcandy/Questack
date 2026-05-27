@@ -1,0 +1,7 @@
+|===
+|Parameter|Description
+
+|`+date+`
+|Briefing date in ISO-8601 format. Defaults to the current date.
+
+|===

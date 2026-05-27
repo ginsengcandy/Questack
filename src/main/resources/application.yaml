@@ -25,3 +25,6 @@ github:
   token: ${GITHUB_TOKEN:}
   api-base-url: https://api.github.com
   search-repositories-path: /search/repositories
+
+briefing:
+  output-directory: docs/daily-briefings

@@ -1,7 +1,5 @@
-package com.questack.collection.github.api;
+package com.questack.briefing.api;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -15,8 +13,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.questack.collection.github.api.dto.GithubCollectionResult;
-import com.questack.collection.github.service.GithubCollector;
+import com.questack.briefing.api.dto.DailyBriefingResponse;
+import com.questack.briefing.service.DailyBriefingService;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -24,40 +23,44 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(GithubCollectionController.class)
+@WebMvcTest(DailyBriefingController.class)
 @AutoConfigureRestDocs(outputDir = "docs/api-docs")
-class GithubCollectionControllerTest {
+class DailyBriefingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private GithubCollector githubCollector;
+    private DailyBriefingService dailyBriefingService;
 
     @Test
-    void collectGithubRepositories() throws Exception {
-        when(githubCollector.collect(anyString(), anyInt()))
-                .thenReturn(new GithubCollectionResult(3, 2, 1));
+    void generateDailyBriefing() throws Exception {
+        LocalDate briefingDate = LocalDate.of(2026, 5, 27);
+        when(dailyBriefingService.generate(briefingDate))
+                .thenReturn(new DailyBriefingResponse(
+                        briefingDate,
+                        "docs/daily-briefings/2026-05-27.md",
+                        3,
+                        "# 데일리 브리핑: 2026-05-27\n"
+                ));
 
-        mockMvc.perform(post("/collections/github")
-                        .queryParam("query", "language:Java topic:spring-boot stars:>=100 fork:false")
-                        .queryParam("perPage", "3"))
+        mockMvc.perform(post("/briefings/daily").queryParam("date", "2026-05-27"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fetchedCount").value(3))
-                .andExpect(jsonPath("$.savedCount").value(2))
-                .andExpect(jsonPath("$.skippedDuplicateCount").value(1))
+                .andExpect(jsonPath("$.briefingDate").value("2026-05-27"))
+                .andExpect(jsonPath("$.filePath").value("docs/daily-briefings/2026-05-27.md"))
+                .andExpect(jsonPath("$.itemCount").value(3))
                 .andDo(document(
-                        "collections-github",
+                        "briefings-daily-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("query").description("GitHub repository search query."),
-                                parameterWithName("perPage").description("Number of repositories to fetch. Accepted range is 1 to 30.")
+                                parameterWithName("date").optional().description("Briefing date in ISO-8601 format. Defaults to the current date.")
                         ),
                         responseFields(
-                                fieldWithPath("fetchedCount").description("Number of repositories fetched from GitHub."),
-                                fieldWithPath("savedCount").description("Number of newly saved collected items."),
-                                fieldWithPath("skippedDuplicateCount").description("Number of repositories skipped because their canonical URL already exists.")
+                                fieldWithPath("briefingDate").description("Date used to generate the daily briefing."),
+                                fieldWithPath("filePath").description("Markdown file path written by the server."),
+                                fieldWithPath("itemCount").description("Number of ranking items included in the briefing."),
+                                fieldWithPath("markdown").description("Generated Korean Markdown briefing content.")
                         )
                 ));
     }

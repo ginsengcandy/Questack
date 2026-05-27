@@ -74,10 +74,30 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 ## TD-008 / 2026-05-26: 컨트롤러 변경은 MockMvc REST Docs 테스트로 고정
 
-**결정 내용:** 앞으로 컨트롤러 메서드를 추가하거나 변경할 때는 MockMvc 기반 컨트롤러 테스트를 함께 작성하거나 수정한다. 테스트는 Spring REST Docs를 사용해 요청 파라미터와 응답 필드를 문서화하고, 생성 스니펫은 `src/docs/api-docs` 아래에 둔다.
+**결정 내용:** 앞으로 컨트롤러 메서드를 추가하거나 변경할 때는 MockMvc 기반 컨트롤러 테스트를 함께 작성하거나 수정한다. 테스트는 Spring REST Docs를 사용해 요청 파라미터와 응답 필드를 문서화하고, 생성 스니펫은 `docs/api-docs` 아래에 둔다.
 
 **이유 / 배경:** Questack은 수집, 랭킹, 브리핑처럼 외부에서 호출 가능한 API가 점차 늘어날 예정이다. 컨트롤러 테스트를 API 문서 생성과 묶으면 엔드포인트 경로, 파라미터, 응답 형태 변경을 테스트에서 바로 감지할 수 있고, README와 실제 API가 어긋나는 일을 줄일 수 있다. MockMvc를 사용하면 실제 서버를 띄우지 않고도 MVC layer를 빠르게 검증할 수 있다.
 
 **대안으로 고려했던 것:** README에 수동으로 API 예시만 유지하는 방식 (구현과 문서가 쉽게 불일치함), 전체 통합 테스트만 사용하는 방식 (느리고 컨트롤러 계약 변화가 덜 선명함), OpenAPI부터 도입하는 방식 (좋은 선택지지만 현재 MVP에는 설정 범위가 큼)
 
-**영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/docs/api-docs/README.md`
+**영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `docs/api-docs/README.md`
+
+## TD-010 / 2026-05-27: 생성 API 명세는 docs 아래에 보관
+
+**결정 내용:** Spring REST Docs로 생성되는 API 명세 스니펫은 `src` 내부가 아니라 `docs/api-docs` 아래에 보관한다.
+
+**이유 / 배경:** `src`는 애플리케이션 소스 코드와 테스트 코드 중심으로 유지하는 편이 프로젝트 구조를 이해하기 쉽다. REST Docs 스니펫은 코드가 아니라 생성 문서 산출물이므로 문서 디렉터리인 `docs` 아래에 두는 것이 더 자연스럽다. 이렇게 하면 앞으로 API 명세, 기술 의사결정, 트러블슈팅, 샘플 브리핑 같은 문서성 산출물이 한 곳에서 관리된다.
+
+**대안으로 고려했던 것:** `src/docs/api-docs` 유지 (테스트 산출물 위치를 코드 트리 안에서 바로 찾기 쉽지만 `src`의 의미가 흐려짐), `build/generated-snippets` 사용 (일반적인 REST Docs 기본 흐름에 가깝지만 커밋 가능한 명세 산출물로 관리하기에는 불편함)
+
+**영향받는 문서 / 파일:** `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `docs/api-docs/README.md`, `README.md`
+
+## TD-009 / 2026-05-27: 일일 브리핑은 한국어 Markdown 파일로 먼저 생성
+
+**결정 내용:** Top 3 랭킹 결과를 기반으로 한국어 데일리 브리핑을 생성하고, 초기 MVP에서는 DB 테이블이 아니라 `docs/daily-briefings/{date}.md` 파일로 저장한다. 브리핑 포맷은 `Source`, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea` 섹션을 고정한다. 저장소에는 생성 결과 예시를 보여주기 위해 `docs/daily-briefings/(sample)-2026-05-27.md` 샘플 파일을 포함한다.
+
+**이유 / 배경:** Questack의 핵심 가치는 수집과 랭킹 결과를 실제 학습 행동으로 변환하는 것이다. Markdown 파일은 Git으로 변경 이력을 남기기 쉽고, 블로그 초안이나 학습 기록으로 바로 재사용할 수 있다. 또한 DB 스키마를 먼저 확장하기보다 출력 포맷을 고정하면 사용자가 어떤 정보가 유용한지 빠르게 피드백할 수 있다.
+
+**대안으로 고려했던 것:** 브리핑을 DB 엔티티로 먼저 저장하는 방식 (조회와 관리에는 유리하지만 현재는 출력 포맷 검증이 더 중요함), JSON 응답만 제공하는 방식 (학습 기록과 블로그 초안으로 재사용하기 불편함), LLM으로 자연어 브리핑을 즉시 생성하는 방식 (품질은 기대할 수 있지만 비용과 재현성 검증이 뒤따라야 함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/briefing/api/DailyBriefingController.java`, `src/main/java/com/questack/briefing/config/BriefingProperties.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `README.md`

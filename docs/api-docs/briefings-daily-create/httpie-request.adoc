@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http --form POST 'http://localhost:8080/briefings/daily?date=2026-05-27'
+----
