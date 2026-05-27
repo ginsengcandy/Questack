@@ -339,6 +339,29 @@ Key current decisions:
 - Record meaningful technical decisions and troubleshooting notes as the project evolves.
 - Treat API calls, LLM calls, and crawling as budgeted resources rather than unlimited utilities.
 
+## Commit Guidelines
+
+PRs should stay feature-oriented, but commits should be split by reviewable intent.
+
+Recommended commit boundaries:
+
+- `feat`: domain/configuration, service logic, or API behavior changes
+- `test`: controller, service, fixture, harness, or REST Docs test changes
+- `docs`: README, technical decisions, troubleshooting, API snippets, sample outputs
+- `refactor`: package moves, path changes, naming changes, or structure-only changes
+- `fix`: bug fixes or behavior corrections
+- `chore`: build, dependency, or repository maintenance
+
+Rules:
+
+- Keep each commit explainable with one sentence.
+- Keep each commit buildable whenever practical.
+- Put controller changes and their MockMvc REST Docs tests in the same commit unless the test harness itself is being introduced separately.
+- Put generated sample artifacts in a separate `docs:` commit when they are not required for runtime behavior.
+- Keep path moves and package restructuring in a separate `refactor:` commit when possible.
+- Technical decisions should be committed with the first code or documentation change that reflects the decision.
+- Troubleshooting entries should be committed with the fix or workflow adjustment that resolves the issue.
+
 ## Roadmap
 
 Near-term:

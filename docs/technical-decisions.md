@@ -82,6 +82,16 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 **영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `docs/api-docs/README.md`
 
+## TD-009 / 2026-05-27: 일일 브리핑은 한국어 Markdown 파일로 먼저 생성
+
+**결정 내용:** Top 3 랭킹 결과를 기반으로 한국어 데일리 브리핑을 생성하고, 초기 MVP에서는 DB 테이블이 아니라 `docs/daily-briefings/{date}.md` 파일로 저장한다. 브리핑 포맷은 `Source`, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea` 섹션을 고정한다. 저장소에는 생성 결과 예시를 보여주기 위해 `docs/daily-briefings/(sample)-2026-05-27.md` 샘플 파일을 포함한다.
+
+**이유 / 배경:** Questack의 핵심 가치는 수집과 랭킹 결과를 실제 학습 행동으로 변환하는 것이다. Markdown 파일은 Git으로 변경 이력을 남기기 쉽고, 블로그 초안이나 학습 기록으로 바로 재사용할 수 있다. 또한 DB 스키마를 먼저 확장하기보다 출력 포맷을 고정하면 사용자가 어떤 정보가 유용한지 빠르게 피드백할 수 있다.
+
+**대안으로 고려했던 것:** 브리핑을 DB 엔티티로 먼저 저장하는 방식 (조회와 관리에는 유리하지만 현재는 출력 포맷 검증이 더 중요함), JSON 응답만 제공하는 방식 (학습 기록과 블로그 초안으로 재사용하기 불편함), LLM으로 자연어 브리핑을 즉시 생성하는 방식 (품질은 기대할 수 있지만 비용과 재현성 검증이 뒤따라야 함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/briefing/api/DailyBriefingController.java`, `src/main/java/com/questack/briefing/config/BriefingProperties.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `README.md`
+
 ## TD-010 / 2026-05-27: 생성 API 명세는 docs 아래에 보관
 
 **결정 내용:** Spring REST Docs로 생성되는 API 명세 스니펫은 `src` 내부가 아니라 `docs/api-docs` 아래에 보관한다.
@@ -92,12 +102,12 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 **영향받는 문서 / 파일:** `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `docs/api-docs/README.md`, `README.md`
 
-## TD-009 / 2026-05-27: 일일 브리핑은 한국어 Markdown 파일로 먼저 생성
+## TD-011 / 2026-05-27: PR은 기능 단위, 커밋은 이해 가능한 변경 단위로 분리
 
-**결정 내용:** Top 3 랭킹 결과를 기반으로 한국어 데일리 브리핑을 생성하고, 초기 MVP에서는 DB 테이블이 아니라 `docs/daily-briefings/{date}.md` 파일로 저장한다. 브리핑 포맷은 `Source`, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea` 섹션을 고정한다. 저장소에는 생성 결과 예시를 보여주기 위해 `docs/daily-briefings/(sample)-2026-05-27.md` 샘플 파일을 포함한다.
+**결정 내용:** 앞으로 PR은 하나의 기능 또는 작업 목표 단위로 유지하되, 커밋은 더 작은 이해 단위로 분리한다. 커밋 분리 기준은 `feat`, `test`, `docs`, `refactor`, `fix`, `chore` 성격을 따른다.
 
-**이유 / 배경:** Questack의 핵심 가치는 수집과 랭킹 결과를 실제 학습 행동으로 변환하는 것이다. Markdown 파일은 Git으로 변경 이력을 남기기 쉽고, 블로그 초안이나 학습 기록으로 바로 재사용할 수 있다. 또한 DB 스키마를 먼저 확장하기보다 출력 포맷을 고정하면 사용자가 어떤 정보가 유용한지 빠르게 피드백할 수 있다.
+**이유 / 배경:** 기능 하나를 구현할 때 도메인, 서비스, 컨트롤러, 테스트, REST Docs, README, 기술적 의사결정, 샘플 산출물이 한꺼번에 바뀌면 빠르게 개발할 수는 있지만 변경 이력을 추적하기 어렵다. 특히 Questack은 학습 자동화 서비스이면서 포트폴리오 프로젝트이므로, 나중에 어떤 설계 판단이 어떤 코드 변경으로 이어졌는지 복원할 수 있어야 한다. PR은 큰 기능 흐름을 보여주고, 커밋은 리뷰와 회고가 가능한 작은 단위로 남긴다.
 
-**대안으로 고려했던 것:** 브리핑을 DB 엔티티로 먼저 저장하는 방식 (조회와 관리에는 유리하지만 현재는 출력 포맷 검증이 더 중요함), JSON 응답만 제공하는 방식 (학습 기록과 블로그 초안으로 재사용하기 불편함), LLM으로 자연어 브리핑을 즉시 생성하는 방식 (품질은 기대할 수 있지만 비용과 재현성 검증이 뒤따라야 함)
+**대안으로 고려했던 것:** 기능 하나를 한 커밋에 모두 담는 방식 (초기 속도는 빠르지만 변경 추적과 리뷰가 어려움), 파일 하나마다 커밋하는 방식 (너무 세분화되어 기능 흐름이 끊김), PR 없이 main에 직접 누적하는 방식 (검토와 기록이 약해짐)
 
-**영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/briefing/api/DailyBriefingController.java`, `src/main/java/com/questack/briefing/config/BriefingProperties.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `README.md`
+**영향받는 문서 / 파일:** `README.md`
