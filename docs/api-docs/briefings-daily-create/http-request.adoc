@@ -1,0 +1,7 @@
+[source,http,options="nowrap"]
+----
+POST /briefings/daily?date=2026-05-27 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: localhost:8080
+
+----

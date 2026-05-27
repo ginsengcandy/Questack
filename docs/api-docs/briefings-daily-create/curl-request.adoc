@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/briefings/daily?date=2026-05-27' -i -X POST \
+    -H 'Content-Type: application/x-www-form-urlencoded'
+----
