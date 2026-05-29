@@ -1,0 +1,20 @@
+|===
+|Path|Type|Description
+
+|`+feedCount+`
+|`+Number+`
+|Number of configured RSS/Atom feeds processed.
+
+|`+fetchedCount+`
+|`+Number+`
+|Number of items fetched from all feeds.
+
+|`+savedCount+`
+|`+Number+`
+|Number of newly saved collected items.
+
+|`+skippedDuplicateCount+`
+|`+Number+`
+|Number of feed items skipped because their canonical URL already exists or is blank.
+
+|===
