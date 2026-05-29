@@ -128,6 +128,7 @@ public class RankingService {
                 score.getId(),
                 item.getId(),
                 item.getTitle(),
+                item.getSummary(),
                 item.getCanonicalUrl(),
                 score.getBackendRelevanceScore(),
                 score.getLearningValueScore(),

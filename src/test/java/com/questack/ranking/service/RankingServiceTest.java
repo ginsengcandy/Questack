@@ -60,6 +60,7 @@ class RankingServiceTest {
         assertThat(result.skippedAlreadyScoredCount()).isZero();
         assertThat(topRankings).hasSize(2);
         assertThat(topRankings.getFirst().title()).isEqualTo("spring-ai-rag-service");
+        assertThat(topRankings.getFirst().summary()).isEqualTo("Java Spring Boot RAG service with Redis and JWT");
         assertThat(topRankings.getFirst().totalScore()).isGreaterThan(topRankings.getLast().totalScore());
     }
 }
