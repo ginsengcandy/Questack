@@ -64,6 +64,7 @@ class RankingControllerTest {
                         1L,
                         10L,
                         "spring-ai-rag-service",
+                        "Java Spring Boot RAG service with vector search",
                         "https://github.com/example/spring-ai-rag-service",
                         12,
                         9,
@@ -76,6 +77,7 @@ class RankingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].rankingScoreId").value(1))
                 .andExpect(jsonPath("$[0].title").value("spring-ai-rag-service"))
+                .andExpect(jsonPath("$[0].summary").value("Java Spring Boot RAG service with vector search"))
                 .andExpect(jsonPath("$[0].totalScore").value(30))
                 .andDo(document(
                         "rankings-top",
@@ -88,6 +90,7 @@ class RankingControllerTest {
                                 fieldWithPath("[].rankingScoreId").description("Ranking score identifier."),
                                 fieldWithPath("[].collectedItemId").description("Collected item identifier."),
                                 fieldWithPath("[].title").description("Collected item title."),
+                                fieldWithPath("[].summary").description("Collected item summary used for topic-specific briefing generation."),
                                 fieldWithPath("[].canonicalUrl").description("Canonical URL of the collected item."),
                                 fieldWithPath("[].backendRelevanceScore").description("Score for backend career relevance."),
                                 fieldWithPath("[].learningValueScore").description("Score for learning value."),

@@ -13,6 +13,10 @@
 |`+String+`
 |Collected item title.
 
+|`+[].summary+`
+|`+String+`
+|Collected item summary used for topic-specific briefing generation.
+
 |`+[].canonicalUrl+`
 |`+String+`
 |Canonical URL of the collected item.

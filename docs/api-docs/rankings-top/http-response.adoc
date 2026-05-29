@@ -2,12 +2,13 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 369
+Content-Length: 434
 
 [ {
   "rankingScoreId" : 1,
   "collectedItemId" : 10,
   "title" : "spring-ai-rag-service",
+  "summary" : "Java Spring Boot RAG service with vector search",
   "canonicalUrl" : "https://github.com/example/spring-ai-rag-service",
   "backendRelevanceScore" : 12,
   "learningValueScore" : 9,

@@ -151,3 +151,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 로드맵 문서만으로 진행 상황을 관리하는 방식 (가볍지만 완료 상태와 PR 연결이 약함), issue 없이 PR만 만드는 방식 (작업 전 합의와 우선순위가 흐려짐), milestone 없이 개별 issue만 나열하는 방식 (MVP 완료 범위가 한눈에 보이지 않음)
 
 **영향받는 문서 / 파일:** `docs/working-guidelines.md`, `docs/roadmap/2-week-workflow.md`
+
+## TD-016 / 2026-05-29: 데일리 브리핑은 주제별 학습 내용을 다르게 생성
+
+**결정 내용:** 데일리 브리핑의 각 항목은 고정 문장 반복이 아니라 수집 항목의 title, summary, ranking reasons를 바탕으로 주제별 내용을 생성한다. 브리핑 항목에는 `Summary`를 추가하고, `Why it matters`, `Backend interview angle`, `30-minute study path`, `Mini project idea`는 데이터베이스 전환, 운영 모니터링, Spring AI, 캐시, 메시징, 인증 같은 주제 프로필에 따라 다른 질문과 실습 제안을 제공한다. 이를 위해 `RankingScoreResponse`는 `CollectedItem.summary`를 함께 반환한다.
+
+**이유 / 배경:** 기존 브리핑은 링크와 제목만 다르고 본문 구조가 거의 같아 실제 학습 계획으로 쓰기 어려웠다. Questack의 가치는 수집된 소재를 학습 가능한 quest로 바꾸는 데 있으므로, 원문이 다루는 핵심 내용과 백엔드 실무 질문, 짧은 리서치 주제, 재현 가능한 미니 프로젝트가 소재별로 달라져야 한다.
+
+**대안으로 고려했던 것:** LLM으로 모든 브리핑 문장을 생성하는 방식 (품질은 기대할 수 있지만 아직 비용과 재현성 가드가 없음), 기존 고정 템플릿 유지 (구현은 단순하지만 학습 가치가 낮음), title만 기반으로 분기하는 방식 (RSS summary와 GitHub description을 버려 내용 품질이 낮아짐)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/ranking/api/dto/RankingScoreResponse.java`, `src/main/java/com/questack/ranking/service/RankingService.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `README.md`

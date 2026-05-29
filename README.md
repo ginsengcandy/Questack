@@ -315,6 +315,7 @@ Response:
     "rankingScoreId": 1,
     "collectedItemId": 1,
     "title": "example/project",
+    "summary": "Spring Boot service example for backend learning",
     "canonicalUrl": "https://github.com/example/project",
     "backendRelevanceScore": 8,
     "learningValueScore": 5,
@@ -332,6 +333,7 @@ POST /briefings/daily?date=2026-05-27
 ```
 
 Generates a Korean Markdown briefing from the current Top 3 rankings and writes it to `docs/daily-briefings/{date}.md`.
+Each item includes a source-specific summary, importance explanation, practical backend interview question with a follow-up, 30-minute study path, and mini project idea.
 The repository includes `docs/daily-briefings/(sample)-2026-05-27.md` only as a sample output artifact.
 
 Response:

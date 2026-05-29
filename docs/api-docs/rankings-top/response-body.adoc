@@ -4,6 +4,7 @@
   "rankingScoreId" : 1,
   "collectedItemId" : 10,
   "title" : "spring-ai-rag-service",
+  "summary" : "Java Spring Boot RAG service with vector search",
   "canonicalUrl" : "https://github.com/example/spring-ai-rag-service",
   "backendRelevanceScore" : 12,
   "learningValueScore" : 9,
