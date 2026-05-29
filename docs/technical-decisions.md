@@ -121,3 +121,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** README에 모든 규칙을 계속 누적하는 방식 (README가 비대해지고 사용자용 문서와 개발용 규칙이 섞임), 기술 의사결정 파일에만 기록하는 방식 (결정 기록과 실행 체크리스트의 역할이 섞임), 구두 규칙으로만 유지하는 방식 (누락 가능성이 큼)
 
 **영향받는 문서 / 파일:** `docs/working-guidelines.md`, `README.md`, `build.gradle`, `docs/samples/daily-briefings/(sample)-2026-05-27.md`
+
+## TD-013 / 2026-05-29: RSS/Atom 기술 블로그 수집기를 CollectedItem 파이프라인에 통합
+
+**결정 내용:** Spring Blog, NAVER D2, Kakao Tech를 첫 RSS/Atom 수집 대상으로 설정하고, feed item을 기존 `CollectedItem` 모델로 정규화한다. RSS와 Atom은 별도 외부 라이브러리 없이 Java XML parser로 처리하며, 수집 엔드포인트는 `POST /collections/rss`로 제공한다.
+
+**이유 / 배경:** Questack은 GitHub만 보는 도구가 아니라 여러 기술 소스를 통합해 백엔드 학습 소재를 선별하는 서비스다. RSS/Atom은 기술 블로그를 안정적으로 수집할 수 있는 표준 인터페이스이고, 기존 `CollectedItem` 파이프라인에 태우면 랭킹과 브리핑 기능을 재사용할 수 있다. 초기에는 의존성을 늘리지 않고 단순한 XML 파서로 MVP를 검증한다.
+
+**대안으로 고려했던 것:** 블로그별 HTML 크롤러 구현 (사이트별 구조 변화에 취약함), RSS 전용 외부 라이브러리 도입 (편리하지만 MVP 단계에서는 의존성 증가), GitHub 수집만 유지 (서비스 스토리가 좁아짐)
+
+**영향받는 문서 / 파일:** `src/main/resources/application.yaml`, `src/main/java/com/questack/collection/rss/config/RssProperties.java`, `src/main/java/com/questack/collection/rss/service/RssCollector.java`, `src/main/java/com/questack/collection/rss/service/RssFeedParser.java`, `src/main/java/com/questack/collection/rss/api/RssCollectionController.java`, `README.md`
