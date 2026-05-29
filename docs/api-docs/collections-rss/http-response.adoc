@@ -1,0 +1,13 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 96
+
+{
+  "feedCount" : 3,
+  "fetchedCount" : 12,
+  "savedCount" : 10,
+  "skippedDuplicateCount" : 2
+}
+----

@@ -23,7 +23,7 @@ The goal is to keep day-to-day development fast while making the project history
 - `docs/working-guidelines.md`: day-to-day development rules
 - `docs/technical-decisions.md`: append-only technical and workflow decisions
 - `docs/troubleshooting.md`: append-only issue investigation log
-- `docs/api-docs`: generated Spring REST Docs snippets
+- `docs/api-docs/index.md`: generated Spring REST Docs snippet index
 - `docs/samples`: committed sample output artifacts
 - `docs/daily-briefings`: runtime daily briefing output
 

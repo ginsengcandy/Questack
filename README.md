@@ -13,6 +13,7 @@ Implemented:
 - Spring Boot 3.5.x application on Java 21
 - H2-backed local persistence
 - GitHub Search API repository collection
+- RSS/Atom technical blog collection
 - Normalized source and collected item model
 - Duplicate prevention by canonical URL
 - Keyword-based backend relevance ranking
@@ -22,7 +23,6 @@ Implemented:
 
 Planned:
 
-- RSS/technical blog collectors
 - Mini-project quest generation with `TODO-STUDENT` sections
 - Replay harness for fixture-based collector tests
 - Cost and rate-limit guardrails
@@ -47,6 +47,10 @@ HTTP Request
   -> GithubCollector
   -> GithubSearchClient
   -> GitHub Search API
+  -> CollectedItem persistence
+  -> RssCollectionController
+  -> RssCollector
+  -> RSS/Atom feeds
   -> CollectedItem persistence
   -> RankingService
   -> RankingScore persistence
@@ -88,6 +92,15 @@ src/main/java/com/questack
         GithubProperties.java
       service/
         GithubCollector.java
+    rss/
+      api/
+        RssCollectionController.java
+        dto/
+      config/
+        RssProperties.java
+      service/
+        RssCollector.java
+        RssFeedParser.java
   ranking/
     RankingScore.java
     RankingScoreRepository.java
@@ -200,6 +213,18 @@ github:
   api-base-url: https://api.github.com
   search-repositories-path: /search/repositories
 
+rss:
+  feeds:
+    - name: Spring Blog
+      url: https://spring.io/blog.atom
+      priority: 1
+    - name: NAVER D2
+      url: https://d2.naver.com/d2.atom
+      priority: 2
+    - name: Kakao Tech
+      url: https://tech.kakao.com/feed/
+      priority: 3
+
 briefing:
   output-directory: docs/daily-briefings
 ```
@@ -208,7 +233,7 @@ Notes:
 
 - H2 is used for the MVP to keep local iteration fast.
 - `open-in-view` is disabled to keep persistence access inside explicit service boundaries.
-- GitHub collection is triggered manually for now. Scheduling will be added after ranking and replay tests are in place.
+- GitHub and RSS collection are triggered manually for now. Scheduling will be added after ranking and replay tests are in place.
 - Daily briefing Markdown files are written under `docs/daily-briefings` by default.
 - `docs/daily-briefings/(sample)-2026-05-27.md` is a committed sample output file, not the default runtime filename.
 
@@ -238,6 +263,25 @@ Response:
 ```
 
 The endpoint intentionally does not use an `/api` prefix. Questack keeps endpoint paths short while the project is still backend-only and internally consumed.
+
+### Collect RSS Feeds
+
+```http
+POST /collections/rss
+```
+
+Collects configured RSS/Atom feeds and saves new feed items as `CollectedItem` records.
+
+Response:
+
+```json
+{
+  "feedCount": 3,
+  "fetchedCount": 12,
+  "savedCount": 10,
+  "skippedDuplicateCount": 2
+}
+```
 
 ### Rank Collected Items
 
@@ -328,6 +372,7 @@ Key current decisions:
 
 - Start with GitHub Search and curated technical blogs before social platforms.
 - Normalize all external content into `CollectedItem`.
+- Collect RSS/Atom technical blog posts through the same `CollectedItem` pipeline.
 - Keep ranking in a separate `RankingScore` model.
 - Start ranking with deterministic keyword rules before LLM-based summarization.
 - Generate daily briefings as Markdown files before introducing a separate briefing table.
@@ -353,8 +398,8 @@ PRs stay feature-oriented, but commits are split by reviewable intent. See `docs
 
 Near-term:
 
-- Add RSS collectors for selected technical blogs.
 - Add fixture replay tests for GitHub collection.
+- Add fixture replay tests for RSS collection.
 
 Next:
 

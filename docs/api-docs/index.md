@@ -11,6 +11,7 @@ Run:
 Current snippet groups:
 
 - `collections-github`
+- `collections-rss`
 - `briefings-daily-create`
 - `rankings-create`
 - `rankings-top`
