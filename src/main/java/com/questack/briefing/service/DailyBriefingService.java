@@ -49,6 +49,8 @@ public class DailyBriefingService {
             builder.append("## ").append(index + 1).append(". ").append(ranking.title()).append(System.lineSeparator());
             builder.append(System.lineSeparator());
             builder.append("- Source: ").append(ranking.canonicalUrl()).append(System.lineSeparator());
+            builder.append(System.lineSeparator());
+            builder.append(scoreTable(ranking));
             builder.append("- Why it matters: ").append(whyItMatters(ranking)).append(System.lineSeparator());
             builder.append("- Backend interview angle: ").append(backendInterviewAngle(ranking)).append(System.lineSeparator());
             builder.append("- 30-minute study path: ").append(studyPath(ranking)).append(System.lineSeparator());
@@ -64,13 +66,27 @@ public class DailyBriefingService {
         return builder.toString();
     }
 
+    private String scoreTable(RankingScoreResponse ranking) {
+        return """
+                | 평가 항목 | 점수 |
+                | --- | ---: |
+                | 백엔드 적합도 | %d |
+                | 학습 가치 | %d |
+                | 구현 가치 | %d |
+                | 총점 | %d |
+
+                """.formatted(
+                ranking.backendRelevanceScore(),
+                ranking.learningValueScore(),
+                ranking.implementationValueScore(),
+                ranking.totalScore()
+        );
+    }
+
     private String whyItMatters(RankingScoreResponse ranking) {
-        return "%s 항목은 백엔드 적합도 %d점, 학습 가치 %d점, 구현 가치 %d점으로 평가되었습니다. %s. "
+        return "%s 항목은 %s 관점에서 백엔드 학습 소재로 선별되었습니다. "
                 .formatted(
                         ranking.title(),
-                        ranking.backendRelevanceScore(),
-                        ranking.learningValueScore(),
-                        ranking.implementationValueScore(),
                         ranking.reasons()
                 )
                 + "신입 백엔드 개발자에게 중요한 것은 단순히 새로운 기술명을 아는 것이 아니라, 해당 기술이 API, 데이터 저장, 인증, 메시징, 운영 자동화 같은 서버 개발 문제를 어떻게 해결하는지 설명하고 작게 구현해보는 것입니다.";

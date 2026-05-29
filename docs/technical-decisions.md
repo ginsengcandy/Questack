@@ -131,3 +131,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 블로그별 HTML 크롤러 구현 (사이트별 구조 변화에 취약함), RSS 전용 외부 라이브러리 도입 (편리하지만 MVP 단계에서는 의존성 증가), GitHub 수집만 유지 (서비스 스토리가 좁아짐)
 
 **영향받는 문서 / 파일:** `src/main/resources/application.yaml`, `src/main/java/com/questack/collection/rss/config/RssProperties.java`, `src/main/java/com/questack/collection/rss/service/RssCollector.java`, `src/main/java/com/questack/collection/rss/service/RssFeedParser.java`, `src/main/java/com/questack/collection/rss/api/RssCollectionController.java`, `README.md`
+
+## TD-014 / 2026-05-29: 브리핑 평가 점수는 Markdown 표로 분리
+
+**결정 내용:** 데일리 브리핑에서 백엔드 적합도, 학습 가치, 구현 가치, 총점은 `Why it matters` 문장 안에 넣지 않고 각 항목 아래 Markdown 표로 표시한다.
+
+**이유 / 배경:** 브리핑은 매일 3개 이슈를 빠르게 비교하고 학습 우선순위를 정하는 문서다. 평가 점수가 긴 설명 문장에 섞이면 항목 간 비교가 어렵고, 사용자가 가장 먼저 봐야 할 백엔드 취업 적합도와 구현 가치가 덜 드러난다. 표로 분리하면 점수는 빠르게 스캔하고, `Why it matters`는 해석과 학습 맥락에 집중할 수 있다.
+
+**대안으로 고려했던 것:** 기존처럼 점수를 문장에 포함하는 방식 (자연스럽지만 비교성이 낮음), 점수를 별도 bullet 목록으로 표시하는 방식 (간단하지만 총점과 세부 점수의 관계가 표보다 덜 선명함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `docs/samples/daily-briefings/(sample)-2026-05-27.md`
