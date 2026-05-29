@@ -141,3 +141,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 기존처럼 점수를 문장에 포함하는 방식 (자연스럽지만 비교성이 낮음), 점수를 별도 bullet 목록으로 표시하는 방식 (간단하지만 총점과 세부 점수의 관계가 표보다 덜 선명함)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `docs/samples/daily-briefings/(sample)-2026-05-27.md`
+
+## TD-015 / 2026-05-29: MVP 남은 작업은 GitHub milestone과 issue로 추적
+
+**결정 내용:** Questack의 남은 MVP 작업은 GitHub milestone `MVP Completion: Replay Harness to Mini Quest`와 연결된 issue로 추적한다. `docs/roadmap/2-week-workflow.md`는 방향과 순서를 제공하고, milestone은 현재 MVP 범위를 정의하며, issue는 작업 계약, PR은 검증된 변경 묶음으로 사용한다. 브랜치 이름에는 가능한 경우 issue 번호를 포함한다.
+
+**이유 / 배경:** 로드맵 문서만으로 남은 일을 추적하면 실제 개발 단위, PR 범위, 완료 상태가 흐려질 수 있다. milestone과 issue를 함께 사용하면 Week 1 파이프라인 안정화, replay harness, RSS source 확장, mini project quest 생성, portfolio demo 준비를 GitHub에서 바로 추적할 수 있고, 문서의 계획과 실제 개발 흐름을 맞추기 쉽다.
+
+**대안으로 고려했던 것:** 로드맵 문서만으로 진행 상황을 관리하는 방식 (가볍지만 완료 상태와 PR 연결이 약함), issue 없이 PR만 만드는 방식 (작업 전 합의와 우선순위가 흐려짐), milestone 없이 개별 issue만 나열하는 방식 (MVP 완료 범위가 한눈에 보이지 않음)
+
+**영향받는 문서 / 파일:** `docs/working-guidelines.md`, `docs/roadmap/2-week-workflow.md`

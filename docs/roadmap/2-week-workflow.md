@@ -171,3 +171,31 @@ Recommended baseline:
 - The service creates one junior-backend interview-level mini project quest.
 - Technical decisions and troubleshooting notes exist as Markdown docs.
 - A replay harness can test collection/ranking without live API calls.
+
+## GitHub Tracking
+
+Current MVP completion milestone:
+
+- [MVP Completion: Replay Harness to Mini Quest](https://github.com/ginsengcandy/Questack/milestone/1)
+
+Use milestone issues as the source of truth for remaining MVP implementation work. The roadmap gives the intended sequence, the milestone defines the active scope, issues define work contracts, and PRs provide reviewed, verified change sets.
+
+Recommended issue order:
+
+1. [#9 Add fixture replay tests for GitHub collection](https://github.com/ginsengcandy/Questack/issues/9)
+2. [#8 Add fixture replay tests for RSS collection](https://github.com/ginsengcandy/Questack/issues/8)
+3. [#7 Lock Top 3 ranking quality with labeled fixtures](https://github.com/ginsengcandy/Questack/issues/7)
+4. [#6 Expand technical blog RSS sources to at least five feeds](https://github.com/ginsengcandy/Questack/issues/6)
+5. [#13 Define mini project quest template](https://github.com/ginsengcandy/Questack/issues/13)
+6. [#11 Generate mini project skeletons with TODO-STUDENT sections](https://github.com/ginsengcandy/Questack/issues/11)
+7. [#10 Add reliability behavior for source failures](https://github.com/ginsengcandy/Questack/issues/10)
+8. [#12 Add automation and cost-control guardrails](https://github.com/ginsengcandy/Questack/issues/12)
+9. [#14 Prepare portfolio demo and retrospective artifacts](https://github.com/ginsengcandy/Questack/issues/14)
+
+Branch names should include the issue number when practical, for example:
+
+- `test/9-github-fixture-replay`
+- `test/8-rss-fixture-replay`
+- `feat/13-quest-template`
+- `feat/11-quest-skeleton-generator`
+- `docs/14-portfolio-demo`
