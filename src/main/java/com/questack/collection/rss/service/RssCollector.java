@@ -62,11 +62,11 @@ public class RssCollector {
                 collectedItemRepository.save(new CollectedItem(
                         source,
                         CollectedItemType.BLOG_POST,
-                        item.title(),
-                        item.description(),
+                        RssTextNormalizer.title(item.title()),
+                        RssTextNormalizer.summary(item.description()),
                         item.link(),
-                        item.link(),
-                        item.author(),
+                        RssTextNormalizer.externalId(item.link()),
+                        RssTextNormalizer.author(item.author()),
                         item.publishedAt()
                 ));
                 savedCount++;

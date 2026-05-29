@@ -57,3 +57,17 @@ This file is append-only. New entries use `TR-###` identifiers and should cross-
 **재발 방지:** 검증 명령은 의존성이 있는 작업끼리 병렬 실행하지 않는다. 추후 하나의 오케스트레이션 엔드포인트나 스케줄러를 만들 때도 수집 완료 후 랭킹, 랭킹 완료 후 브리핑 생성 순서를 명시한다.
 
 **관련 항목:** `TD-009`
+
+## TR-005 / 2026-05-29: RSS 수집 중 summary 컬럼 길이 초과로 500 응답
+
+**증상:** `POST /collections/rss` 수동 검증 중 500 응답이 발생했다. 서버 로그에는 H2 `Value too long for column "SUMMARY CHARACTER VARYING(2000)"` 오류가 출력됐고, NAVER D2 feed의 description 값이 2000자를 초과했다.
+
+**원인:** RSS description은 짧은 요약이 아니라 HTML 본문 일부를 포함할 수 있다. 기존 `CollectedItem.summary` 컬럼은 2000자로 제한되어 있는데, RSS 수집기가 feed description을 정규화하거나 자르지 않고 그대로 저장했다.
+
+**조사 과정:** 서버 로그에서 `collected_items.summary` insert 시점에 길이 초과가 발생한 것을 확인했다. GitHub 수집과 달리 RSS/Atom feed는 description/content에 이미지 태그와 긴 HTML 조각이 포함될 수 있음을 확인했다.
+
+**해결:** RSS 수집 저장 전 `RssTextNormalizer`를 통해 HTML 태그를 제거하고, title/summary/externalId/author를 `CollectedItem` 컬럼 길이에 맞게 제한했다. summary는 2000자, title은 300자, externalId와 author는 100자로 제한한다.
+
+**재발 방지:** 외부 source adapter는 `CollectedItem`으로 정규화하기 전에 컬럼 길이와 텍스트 품질을 맞춘다. 새 collector를 추가할 때도 원본 payload를 그대로 저장하지 않고 정규화/절단 정책을 먼저 둔다.
+
+**관련 항목:** `TD-013`
