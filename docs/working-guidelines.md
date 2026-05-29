@@ -7,15 +7,17 @@ The goal is to keep day-to-day development fast while making the project history
 ## Before Starting Work
 
 1. Check the current branch and working tree.
-2. Use a branch prefix that matches the work:
+2. Check the relevant GitHub milestone and issue when the work maps to roadmap progress.
+3. Use a branch prefix that matches the work:
    - `feat/`
    - `fix/`
    - `docs/`
    - `test/`
    - `refactor/`
    - `chore/`
-3. Read the relevant code and nearby tests before editing.
-4. If the work changes a previously recorded rule, update this file or `docs/technical-decisions.md`.
+4. Include the issue number in the branch name when practical, for example `test/9-github-fixture-replay`.
+5. Read the relevant code and nearby tests before editing.
+6. If the work changes a previously recorded rule, update this file or `docs/technical-decisions.md`.
 
 ## Document Map
 
@@ -83,6 +85,14 @@ Rules:
 - Keep path moves and package restructuring in a separate `refactor:` commit when possible.
 - Technical decisions should be committed with the first code or documentation change that reflects the decision.
 - Troubleshooting entries should be committed with the fix or workflow adjustment that resolves the issue.
+
+## GitHub Milestone Flow
+
+- Use `docs/roadmap/2-week-workflow.md` for direction, the current GitHub milestone for MVP scope, issues for work contracts, and PRs for reviewable verified changes.
+- Prefer one issue per PR unless tightly related documentation or cleanup work is clearer together.
+- Reference related issues in commits or PR descriptions with `Refs #issue-number`.
+- Use `Closes #issue-number` only when the PR fully completes the issue.
+- Keep issue order aligned with the roadmap when possible: replay harness first, ranking quality and source expansion next, mini-project quest work after the Week 1 pipeline is stable.
 
 ## Pre-Commit Checklist
 

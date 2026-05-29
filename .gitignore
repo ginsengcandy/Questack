@@ -5,6 +5,8 @@ build/
 .env
 *.log
 
+docs/daily-briefings/
+
 .idea/
 *.iml
 
