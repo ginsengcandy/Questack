@@ -80,7 +80,7 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 **대안으로 고려했던 것:** README에 수동으로 API 예시만 유지하는 방식 (구현과 문서가 쉽게 불일치함), 전체 통합 테스트만 사용하는 방식 (느리고 컨트롤러 계약 변화가 덜 선명함), OpenAPI부터 도입하는 방식 (좋은 선택지지만 현재 MVP에는 설정 범위가 큼)
 
-**영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `docs/api-docs/README.md`
+**영향받는 문서 / 파일:** `build.gradle`, `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `docs/api-docs/index.md`
 
 ## TD-009 / 2026-05-27: 일일 브리핑은 한국어 Markdown 파일로 먼저 생성
 
@@ -100,7 +100,7 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 **대안으로 고려했던 것:** `src/docs/api-docs` 유지 (테스트 산출물 위치를 코드 트리 안에서 바로 찾기 쉽지만 `src`의 의미가 흐려짐), `build/generated-snippets` 사용 (일반적인 REST Docs 기본 흐름에 가깝지만 커밋 가능한 명세 산출물로 관리하기에는 불편함)
 
-**영향받는 문서 / 파일:** `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `docs/api-docs/README.md`, `README.md`
+**영향받는 문서 / 파일:** `src/test/java/com/questack/collection/github/api/GithubCollectionControllerTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `src/test/java/com/questack/briefing/api/DailyBriefingControllerTest.java`, `docs/api-docs/index.md`, `README.md`
 
 ## TD-011 / 2026-05-27: PR은 기능 단위, 커밋은 이해 가능한 변경 단위로 분리
 
