@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>AI Backend Blog</title>
+    <entry>
+        <title>Spring AI RAG Release Notes</title>
+        <summary>Spring AI RAG backend implementation with retrieval, generation, and fallback concerns</summary>
+        <link href="https://example.com/spring-ai-rag" />
+        <author>
+            <name>ai-team</name>
+        </author>
+        <updated>2026-05-29T12:00:00Z</updated>
+    </entry>
+</feed>
