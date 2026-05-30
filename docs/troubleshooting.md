@@ -85,3 +85,16 @@ This file is append-only. New entries use `TR-###` identifiers and should cross-
 **재발 방지:** 같은 테스트 안에서 `MockRestServiceServer`를 여러 replay 구간으로 사용할 때는 각 구간마다 expectation 등록, 실행, verify, reset 순서를 명확히 분리한다.
 
 **관련 항목:** `TD-018`
+## TR-006 / 2026-05-30: fixture replay 테스트 추가 후 RankingServiceTest source unique 제약 충돌
+
+**증상:** GitHub fixture replay 테스트를 추가한 뒤 `./gradlew test` 실행 중 `RankingServiceTest`가 `DataIntegrityViolationException`으로 실패했다. 실패 지점은 테스트용 `Source("Test GitHub", ...)` 저장 시점이었다.
+
+**원인:** 여러 `@SpringBootTest`가 같은 H2 application context를 재사용할 수 있는데, 기존 `RankingServiceTest`는 테스트 시작 전에 repository 데이터를 정리하지 않았다. 하네스 테스트가 늘어나면서 이전 테스트 데이터가 남아 `sources.name` unique 제약과 충돌했다.
+
+**조사 과정:** 새 GitHub replay 테스트는 `GitHub Search` source를 사용했지만, 실패는 기존 ranking 테스트의 `Test GitHub` source 저장에서 발생했다. 코드 경로보다 테스트 간 DB 상태 공유 문제로 판단했고, ranking score, collected item, source 순서로 데이터를 정리하도록 보강했다.
+
+**해결:** `GithubCollectorReplayTest`와 `RankingServiceTest`에 `@BeforeEach` cleanup을 추가했다. FK 제약을 고려해 `RankingScoreRepository`, `CollectedItemRepository`, `SourceRepository` 순서로 `deleteAll()`을 호출한다. 이후 `./gradlew test`가 통과했다.
+
+**재발 방지:** repository를 직접 사용하는 Spring Boot 테스트는 테스트 시작 전에 필요한 저장소를 명시적으로 정리한다. 특히 `Source.name`과 `CollectedItem.canonicalUrl`처럼 unique 제약이 있는 테이블은 테스트 순서나 context cache에 의존하지 않는다.
+
+**관련 항목:** `TD-017`

@@ -1,0 +1,32 @@
+{
+  "total_count": 2,
+  "incomplete_results": false,
+  "items": [
+    {
+      "id": 1001,
+      "name": "spring-ai-rag-service",
+      "full_name": "example/spring-ai-rag-service",
+      "html_url": "https://github.com/example/spring-ai-rag-service",
+      "description": "Java Spring Boot RAG service with Redis caching and JWT authentication",
+      "stargazers_count": 421,
+      "language": "Java",
+      "updated_at": "2026-05-28T10:15:30Z",
+      "owner": {
+        "login": "example"
+      }
+    },
+    {
+      "id": 1002,
+      "name": "kafka-order-retry-lab",
+      "full_name": "example/kafka-order-retry-lab",
+      "html_url": "https://github.com/example/kafka-order-retry-lab",
+      "description": "Spring Boot Kafka consumer retry and dead-letter queue sample",
+      "stargazers_count": 178,
+      "language": "Java",
+      "updated_at": "2026-05-27T09:00:00Z",
+      "owner": {
+        "login": "example"
+      }
+    }
+  ]
+}
