@@ -161,3 +161,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** LLM으로 모든 브리핑 문장을 생성하는 방식 (품질은 기대할 수 있지만 아직 비용과 재현성 가드가 없음), 기존 고정 템플릿 유지 (구현은 단순하지만 학습 가치가 낮음), title만 기반으로 분기하는 방식 (RSS summary와 GitHub description을 버려 내용 품질이 낮아짐)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/ranking/api/dto/RankingScoreResponse.java`, `src/main/java/com/questack/ranking/service/RankingService.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `README.md`
+
+## TD-018 / 2026-05-30: RSS 수집기는 fixture replay 테스트로 검증
+
+**결정 내용:** RSS/Atom 수집 파이프라인은 live feed 요청 없이 XML fixture를 replay하는 테스트로 검증한다. fixture는 `src/test/resources/fixtures/rss` 아래에 RSS와 Atom 예시를 함께 두고, 테스트에서는 `MockRestServiceServer`가 feed URL 요청에 fixture XML을 반환하게 한다. 검증 범위는 feed별 source 생성, RSS/Atom parsing, `RssTextNormalizer` 적용, 빈 link skip, canonical URL 기반 중복 skip, `CollectedItem` 저장을 포함한다.
+
+**이유 / 배경:** RSS feed는 외부 사이트 상태, 네트워크, feed 내용 변화에 영향을 받기 쉽다. live feed에 의존하지 않는 replay 테스트를 두면 RSS 수집기의 핵심 계약을 안정적으로 검증할 수 있고, 긴 description 정규화나 link 누락 같은 edge case를 반복 재현할 수 있다.
+
+**대안으로 고려했던 것:** live RSS URL을 테스트에서 직접 호출하는 방식 (실제 feed와 가깝지만 불안정하고 느림), parser 단위 테스트만 유지하는 방식 (빠르지만 fetch부터 persistence까지의 통합 흐름을 검증하지 못함), 별도 HTTP mock 서버 라이브러리 도입 (정교하지만 현재 하네스에는 Spring test의 mock server로 충분함)
+
+**영향받는 문서 / 파일:** `src/test/resources/fixtures/rss/backend-blog-rss.xml`, `src/test/resources/fixtures/rss/backend-blog-atom.xml`, `src/test/java/com/questack/collection/rss/service/RssCollectorReplayTest.java`

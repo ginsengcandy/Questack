@@ -71,3 +71,17 @@ This file is append-only. New entries use `TR-###` identifiers and should cross-
 **재발 방지:** 외부 source adapter는 `CollectedItem`으로 정규화하기 전에 컬럼 길이와 텍스트 품질을 맞춘다. 새 collector를 추가할 때도 원본 payload를 그대로 저장하지 않고 정규화/절단 정책을 먼저 둔다.
 
 **관련 항목:** `TD-013`
+
+## TR-007 / 2026-05-30: MockRestServiceServer expectation을 replay 중간에 추가하다 실패
+
+**증상:** RSS fixture replay 테스트에서 같은 fixture를 두 번 수집하는 중 두 번째 feed expectation을 추가할 때 `IllegalStateException`이 발생했다.
+
+**원인:** `MockRestServiceServer`는 요청이 이미 실행된 뒤 검증되지 않은 상태에서 새 expectation을 추가하는 흐름을 허용하지 않는다. 첫 번째 replay 요청 2건을 실행한 뒤 곧바로 두 번째 replay expectation을 이어 붙이면서 mock server 상태가 섞였다.
+
+**조사 과정:** 실패 지점이 collector나 parser가 아니라 `server.expect(...)` 호출부였고, 첫 replay가 끝난 뒤 mock server 검증/초기화 없이 다음 expectation을 등록하고 있었다.
+
+**해결:** 첫 번째 `rssCollector.collect()` 직후 `server.verify()`와 `server.reset()`을 호출한 뒤 두 번째 replay expectation을 등록하도록 테스트를 수정했다.
+
+**재발 방지:** 같은 테스트 안에서 `MockRestServiceServer`를 여러 replay 구간으로 사용할 때는 각 구간마다 expectation 등록, 실행, verify, reset 순서를 명확히 분리한다.
+
+**관련 항목:** `TD-018`
