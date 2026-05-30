@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.questack.collection.CollectedItem;
 import com.questack.collection.CollectedItemRepository;
 import com.questack.collection.CollectedItemType;
+import com.questack.ranking.RankingScoreRepository;
 import com.questack.ranking.api.dto.RankingRunResult;
 import com.questack.ranking.api.dto.RankingScoreResponse;
 import com.questack.source.Source;
@@ -12,6 +13,7 @@ import com.questack.source.SourceRepository;
 import com.questack.source.SourceType;
 import java.time.Instant;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +29,16 @@ class RankingServiceTest {
 
     @Autowired
     private CollectedItemRepository collectedItemRepository;
+
+    @Autowired
+    private RankingScoreRepository rankingScoreRepository;
+
+    @BeforeEach
+    void setUp() {
+        rankingScoreRepository.deleteAll();
+        collectedItemRepository.deleteAll();
+        sourceRepository.deleteAll();
+    }
 
     @Test
     void ranksBackendRelevantItemsAboveFrontendHeavyItems() {

@@ -161,3 +161,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** LLM으로 모든 브리핑 문장을 생성하는 방식 (품질은 기대할 수 있지만 아직 비용과 재현성 가드가 없음), 기존 고정 템플릿 유지 (구현은 단순하지만 학습 가치가 낮음), title만 기반으로 분기하는 방식 (RSS summary와 GitHub description을 버려 내용 품질이 낮아짐)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/briefing/service/DailyBriefingService.java`, `src/main/java/com/questack/ranking/api/dto/RankingScoreResponse.java`, `src/main/java/com/questack/ranking/service/RankingService.java`, `src/test/java/com/questack/briefing/service/DailyBriefingServiceTest.java`, `src/test/java/com/questack/ranking/api/RankingControllerTest.java`, `README.md`
+
+## TD-017 / 2026-05-30: GitHub 수집기는 fixture replay 테스트로 검증
+
+**결정 내용:** GitHub Search 수집 파이프라인은 live GitHub API 호출 없이 JSON fixture를 replay하는 테스트로 검증한다. fixture는 `src/test/resources/fixtures/github` 아래에 두고, 테스트에서는 fixture를 GitHub client DTO로 역직렬화한 뒤 `GithubSearchClient` mock이 반환하게 한다. 검증 범위는 `CollectedItem` 정규화, source 생성, canonical URL 기반 중복 skip을 포함한다.
+
+**이유 / 배경:** Questack의 수집기는 외부 API 응답 형태에 의존하지만, 기본 검증이 live API에 묶이면 rate limit, 네트워크 상태, GitHub 데이터 변화 때문에 테스트가 불안정해진다. fixture replay 테스트는 외부 API 비용 없이 수집기의 핵심 정규화 계약을 고정하고, 이후 RSS replay harness와 ranking quality fixture로 확장하기 좋은 기반이 된다.
+
+**대안으로 고려했던 것:** live GitHub API를 테스트에서 직접 호출하는 방식 (현실 응답을 볼 수 있지만 느리고 불안정하며 토큰/rate limit 영향을 받음), service 단위에서 DTO를 직접 생성하는 방식 (빠르지만 실제 JSON mapping 회귀를 잡기 어려움), WireMock 같은 HTTP mock 서버 도입 (정교하지만 현재 MVP 하네스에는 설정 범위가 큼)
+
+**영향받는 문서 / 파일:** `src/test/resources/fixtures/github/search-repositories.json`, `src/test/java/com/questack/collection/github/service/GithubCollectorReplayTest.java`, `src/test/java/com/questack/ranking/service/RankingServiceTest.java`
