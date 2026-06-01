@@ -191,3 +191,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** live 수집 결과로 랭킹 품질을 수동 확인하는 방식 (데이터가 매번 달라 재현성이 낮음), 점수 계산 단위 테스트만 유지하는 방식 (Top 3 품질을 직접 검증하지 못함), LLM 평가를 붙이는 방식 (아직 MVP 필수 범위가 아니며 비용/재현성 가드가 먼저 필요함)
 
 **영향받는 문서 / 파일:** `src/test/resources/fixtures/ranking/labeled-collected-items.json`, `src/test/java/com/questack/ranking/service/RankingQualityFixtureTest.java`
+
+## TD-020 / 2026-06-02: MVP RSS 소스를 5개 기술 블로그 feed로 확장
+
+**결정 내용:** MVP Done Criteria를 충족하기 위해 RSS/Atom 수집 대상 기술 블로그를 5개로 확장한다. 기존 Spring Blog, NAVER D2, Kakao Tech에 AWS News Blog와 InfoQ Software Engineering feed를 추가한다. 각 feed는 `application.yaml`에서 명시적인 priority를 가진다.
+
+**이유 / 배경:** Questack의 Done Criteria는 GitHub와 최소 5개 기술 블로그 source 수집을 요구한다. AWS News Blog는 클라우드/인프라 변경 신호를 빠르게 제공하고, InfoQ Software Engineering은 architecture, DevOps, AI engineering, software development 동향을 제공해 Java/Spring/backend 학습 소재를 넓힌다. 두 source 모두 RSS feed를 제공하므로 기존 `CollectedItem` 파이프라인과 replay harness 방향을 유지할 수 있다.
+
+**대안으로 고려했던 것:** 국내 기업 블로그를 먼저 5개로 확장하는 방식 (포트폴리오 스토리에는 좋지만 RSS feed URL 안정성을 더 확인해야 함), Baeldung 추가 (Java/Spring 학습에는 강하지만 tutorial 성격이 강해 일일 신호 source로는 후순위), OpenAI Blog 추가 (AI backend에는 유용하지만 MVP 단계에서는 RSS 안정성과 백엔드 범용성을 우선함)
+
+**영향받는 문서 / 파일:** `src/main/resources/application.yaml`, `src/test/java/com/questack/collection/rss/config/RssPropertiesTest.java`, `README.md`, `docs/sources/source-candidates.md`
