@@ -181,3 +181,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** live RSS URL을 테스트에서 직접 호출하는 방식 (실제 feed와 가깝지만 불안정하고 느림), parser 단위 테스트만 유지하는 방식 (빠르지만 fetch부터 persistence까지의 통합 흐름을 검증하지 못함), 별도 HTTP mock 서버 라이브러리 도입 (정교하지만 현재 하네스에는 Spring test의 mock server로 충분함)
 
 **영향받는 문서 / 파일:** `src/test/resources/fixtures/rss/backend-blog-rss.xml`, `src/test/resources/fixtures/rss/backend-blog-atom.xml`, `src/test/java/com/questack/collection/rss/service/RssCollectorReplayTest.java`
+
+## TD-019 / 2026-06-01: Top 3 랭킹 품질은 labeled fixture로 고정
+
+**결정 내용:** 랭킹 품질은 useful/not_useful label이 붙은 `CollectedItem` fixture로 검증한다. fixture에는 Spring AI/RAG, DB migration, Kafka retry 같은 백엔드 실무 소재와 frontend-only, hardware-heavy, business-only 소재를 함께 넣고, `RankingService`가 useful 항목만 Top 3로 반환하는지 확인한다.
+
+**이유 / 배경:** 수집 replay 테스트만으로는 Top 3가 실제 백엔드 취업 준비에 적합한지 보장할 수 없다. Questack의 브리핑은 랭킹 결과를 그대로 학습 계획으로 바꾸므로, 부정 소재가 상위에 올라오는 회귀를 테스트에서 빠르게 잡아야 한다. labeled fixture는 현재 결정론적 키워드 랭킹을 유지하면서도 랭킹 품질 기대치를 명시적으로 문서화하고 검증하는 방법이다.
+
+**대안으로 고려했던 것:** live 수집 결과로 랭킹 품질을 수동 확인하는 방식 (데이터가 매번 달라 재현성이 낮음), 점수 계산 단위 테스트만 유지하는 방식 (Top 3 품질을 직접 검증하지 못함), LLM 평가를 붙이는 방식 (아직 MVP 필수 범위가 아니며 비용/재현성 가드가 먼저 필요함)
+
+**영향받는 문서 / 파일:** `src/test/resources/fixtures/ranking/labeled-collected-items.json`, `src/test/java/com/questack/ranking/service/RankingQualityFixtureTest.java`

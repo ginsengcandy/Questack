@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "sourceName": "Fixture GitHub",
+      "sourceType": "GITHUB",
+      "itemType": "GITHUB_REPOSITORY",
+      "title": "spring-ai-rag-service",
+      "summary": "Java Spring Boot Spring AI RAG service with Redis cache and JWT authentication",
+      "canonicalUrl": "https://github.com/example/spring-ai-rag-service",
+      "label": "useful"
+    },
+    {
+      "sourceName": "Fixture Blog",
+      "sourceType": "RSS",
+      "itemType": "BLOG_POST",
+      "title": "Oracle to MySQL zero-downtime migration with JPA",
+      "summary": "Spring backend database migration story covering MySQL, JPA, Hibernate, rollback, and verification",
+      "canonicalUrl": "https://example.com/mysql-migration",
+      "label": "useful"
+    },
+    {
+      "sourceName": "Fixture GitHub",
+      "sourceType": "GITHUB",
+      "itemType": "GITHUB_REPOSITORY",
+      "title": "kafka-order-retry-dlq",
+      "summary": "Java Spring Boot Kafka consumer retry, dead-letter queue, Redis idempotency, and JWT secured admin API",
+      "canonicalUrl": "https://github.com/example/kafka-order-retry-dlq",
+      "label": "useful"
+    },
+    {
+      "sourceName": "Fixture GitHub",
+      "sourceType": "GITHUB",
+      "itemType": "GITHUB_REPOSITORY",
+      "title": "react-css-dashboard",
+      "summary": "Frontend React CSS dashboard with Vue component examples",
+      "canonicalUrl": "https://github.com/example/react-css-dashboard",
+      "label": "not_useful"
+    },
+    {
+      "sourceName": "Fixture Blog",
+      "sourceType": "RSS",
+      "itemType": "BLOG_POST",
+      "title": "Battery robotics investment outlook",
+      "summary": "Business-only news about robotics, battery, semiconductor, and chip manufacturing investment",
+      "canonicalUrl": "https://example.com/battery-robotics-investment",
+      "label": "not_useful"
+    },
+    {
+      "sourceName": "Fixture Blog",
+      "sourceType": "RSS",
+      "itemType": "BLOG_POST",
+      "title": "Quarterly SaaS market funding report",
+      "summary": "Investment-only business report without backend implementation details",
+      "canonicalUrl": "https://example.com/saas-funding-report",
+      "label": "not_useful"
+    }
+  ]
+}
