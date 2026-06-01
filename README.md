@@ -224,6 +224,12 @@ rss:
     - name: Kakao Tech
       url: https://tech.kakao.com/feed/
       priority: 3
+    - name: AWS News Blog
+      url: https://aws.amazon.com/blogs/aws/feed/
+      priority: 4
+    - name: InfoQ Software Engineering
+      url: https://feed.infoq.com/news/SoftwareDevelopment
+      priority: 5
 
 briefing:
   output-directory: docs/daily-briefings
@@ -234,6 +240,7 @@ Notes:
 - H2 is used for the MVP to keep local iteration fast.
 - `open-in-view` is disabled to keep persistence access inside explicit service boundaries.
 - GitHub and RSS collection are triggered manually for now. Scheduling will be added after ranking and replay tests are in place.
+- The MVP RSS source set includes five configured technical blog feeds.
 - Daily briefing Markdown files are written under `docs/daily-briefings` by default.
 - `docs/daily-briefings/(sample)-2026-05-27.md` is a committed sample output file, not the default runtime filename.
 

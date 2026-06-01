@@ -19,6 +19,7 @@ Priority levels:
 | P1 | Spring Blog | https://spring.io/blog | Directly relevant to Java/Spring backend interviews. |
 | P1 | OpenAI Blog | https://openai.com/news/ | Useful for AI backend and API trends. |
 | P1 | AWS Architecture Blog | https://aws.amazon.com/blogs/architecture/ | Backend architecture, scalability, reliability. |
+| P1 | AWS News Blog | https://aws.amazon.com/blogs/aws/ | Cloud service launches and backend infrastructure changes. |
 | P1 | InfoQ | https://www.infoq.com/ | Backend, architecture, Java, cloud trend coverage. |
 | P1 | Baeldung | https://www.baeldung.com/ | Practical Java/Spring learning material. |
 | P2 | Martin Fowler | https://martinfowler.com/ | Architecture and engineering practice. |
@@ -71,15 +72,24 @@ Start with:
 2. Spring Blog
 3. NAVER D2
 4. kakao tech
-5. LINE Engineering
-6. Woowa Brothers Tech Blog
-7. toss tech
-8. KakaoPay Tech Blog
-9. Baeldung
-10. InfoQ
+5. AWS News Blog
+6. InfoQ Software Engineering
+7. LINE Engineering
+8. Woowa Brothers Tech Blog
+9. toss tech
+10. KakaoPay Tech Blog
+11. Baeldung
 
 Reason:
 
 - Strong Java/Spring/backend signal.
 - Enough Korean company engineering content for self-introduction and interviews.
 - Small enough to debug within 2 weeks.
+
+Configured MVP RSS feeds:
+
+1. Spring Blog
+2. NAVER D2
+3. kakao tech
+4. AWS News Blog
+5. InfoQ Software Engineering
