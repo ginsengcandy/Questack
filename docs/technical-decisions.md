@@ -201,3 +201,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 국내 기업 블로그를 먼저 5개로 확장하는 방식 (포트폴리오 스토리에는 좋지만 RSS feed URL 안정성을 더 확인해야 함), Baeldung 추가 (Java/Spring 학습에는 강하지만 tutorial 성격이 강해 일일 신호 source로는 후순위), OpenAI Blog 추가 (AI backend에는 유용하지만 MVP 단계에서는 RSS 안정성과 백엔드 범용성을 우선함)
 
 **영향받는 문서 / 파일:** `src/main/resources/application.yaml`, `src/test/java/com/questack/collection/rss/config/RssPropertiesTest.java`, `README.md`, `docs/sources/source-candidates.md`
+
+## TD-021 / 2026-06-02: Mini project quest template은 TODO-STUDENT 경계를 필수로 가진다
+
+**결정 내용:** Week 2 mini project quest는 `MiniProjectQuestTemplate`으로 포맷을 고정한다. 템플릿은 topic, scenario, difficulty, learning goals, required concepts, acceptance criteria, deliverables, `TODO-STUDENT` boundaries를 가진다. 모든 quest template은 최소 하나 이상의 `TODO-STUDENT` boundary를 포함해야 하며, boundary marker는 `TODO-STUDENT`로 시작해야 한다.
+
+**이유 / 배경:** Questack의 mini project는 학습자가 직접 구현해야 할 핵심 로직을 남겨두는 것이 중요하다. generator를 먼저 만들면 어떤 코드를 자동 생성하고 어떤 코드를 학습자에게 맡길지 경계가 흐려질 수 있다. 따라서 Redis cache invalidation, JWT refresh token rotation, Kafka retry/DLQ, Spring AI RAG document search 같은 예시 템플릿으로 quest 형식을 먼저 고정하고, skeleton generator는 이 계약을 따르도록 한다.
+
+**대안으로 고려했던 것:** project skeleton generator부터 구현하는 방식 (빠르게 결과물을 만들 수 있지만 학습 경계가 불명확해짐), Markdown 문서만으로 템플릿을 유지하는 방식 (가볍지만 코드 생성 계약을 테스트로 고정하기 어려움), LLM이 quest를 자유 형식으로 생성하게 하는 방식 (표현은 풍부하지만 MVP 단계에서는 재현성과 `TODO-STUDENT` 경계 보장이 약함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/quest/template/MiniProjectQuestTemplate.java`, `src/main/java/com/questack/quest/template/TodoStudentBoundary.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplates.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplateRenderer.java`, `src/test/java/com/questack/quest/template/MiniProjectQuestTemplateTest.java`, `docs/quest/mini-project-quest-template.md`, `README.md`
