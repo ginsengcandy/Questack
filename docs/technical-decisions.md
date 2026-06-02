@@ -241,3 +241,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** 애플리케이션 시작 직후 자동 실행하는 방식 (개발 중 외부 호출이 예측하기 어려움), 수동 API만 유지하는 방식 (Week 2 automation 목표를 충족하지 못함), LLM 비용 가드를 LLM 도입 시점까지 미루는 방식 (나중에 정책을 끼워 넣기보다 기본값 0으로 계약을 먼저 고정하는 편이 안전함)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/QuestackApplication.java`, `src/main/java/com/questack/automation/config/AutomationProperties.java`, `src/main/java/com/questack/automation/schedule/DailyAutomationScheduler.java`, `src/main/java/com/questack/automation/service/DailyAutomationService.java`, `src/main/java/com/questack/automation/service/DailyAutomationBudgetGuard.java`, `src/main/resources/application.yaml`, `README.md`
+
+## TD-025 / 2026-06-02: Portfolio demo 산출물은 docs/samples 아래에 고정
+
+**결정 내용:** MVP 포트폴리오 검토용 샘플 산출물은 런타임 출력 경로가 아니라 `docs/samples` 아래에 보관한다. 데일리 브리핑 샘플은 `docs/samples/daily-briefings`에 두고, 생성된 mini project quest skeleton 샘플은 `docs/samples/mini-project-quests/{quest-id}` 아래에 둔다. `docs/daily-briefings`는 계속 런타임 출력 경로로 취급하고 Git 관리 대상에서 제외한다.
+
+**이유 / 배경:** Questack은 매일 브리핑을 생성하므로 런타임 출력 파일을 그대로 커밋하면 날짜별 산출물이 불필요하게 누적될 수 있다. 반면 포트폴리오 리뷰에서는 실제 출력 예시가 필요하다. `docs/samples`로 샘플을 분리하면 저장소는 Questack의 collect -> rank -> brief -> quest 흐름을 명확히 보여주면서도 매일 생성되는 파일을 실수로 커밋하지 않게 유지할 수 있다.
+
+**대안으로 고려했던 것:** `docs/daily-briefings`의 최신 파일을 그대로 커밋하는 방식 (런타임 산출물과 샘플 산출물의 경계가 흐려짐), README에 출력 예시를 길게 붙이는 방식 (README가 비대해지고 실제 skeleton 파일 구조를 보여주기 어려움), 별도 demo 디렉터리를 만드는 방식 (`docs` 아래 기존 문서/샘플 체계와 중복됨)
+
+**영향받는 문서 / 파일:** `README.md`, `docs/roadmap/2-week-workflow.md`, `docs/samples/daily-briefings/(sample)-2026-05-29.md`, `docs/samples/mini-project-quests/spring-ai-rag-document-search`

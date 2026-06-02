@@ -4,7 +4,7 @@ Questack is a backend-focused study automation service.
 
 The name means **Quest + Stack**. The product idea is simple: collect backend and AI engineering signals every day, filter them for Java/Spring/backend relevance, and turn the useful ones into short learning quests and mini-projects.
 
-This repository is intentionally being built as a small, inspectable Spring Boot backend rather than a feature-heavy prototype. The first milestone focuses on a reliable collection pipeline: external source integration, normalized persistence, duplicate handling, and explicit technical decision records.
+This repository is intentionally built as a small, inspectable Spring Boot backend rather than a feature-heavy prototype. The MVP focuses on a reliable learning pipeline: external source integration, normalized persistence, duplicate handling, ranking, daily briefing output, and mini-project quest generation.
 
 ## Current Scope
 
@@ -20,12 +20,10 @@ Implemented:
 - Korean daily briefing Markdown generation from Top 3 rankings
 - Manual collection endpoint for local verification
 - Disabled-by-default daily automation pipeline with daily cost guardrails
+- Mini-project quest templates with explicit `TODO-STUDENT` learning boundaries
+- Deterministic mini-project skeleton generator
+- Portfolio sample artifacts for a daily briefing and one generated mini-project quest
 - Technical decision and troubleshooting logs under `docs/`
-
-Planned:
-
-- Mini-project quest generation with `TODO-STUDENT` sections
-- Portfolio demo and retrospective artifacts
 
 ## Why This Exists
 
@@ -42,7 +40,7 @@ Backend hiring signals change quickly. For a junior backend developer, however, 
 The current flow is:
 
 ```text
-HTTP Request
+Manual HTTP Request or Disabled Daily Scheduler
   -> GithubCollectionController
   -> GithubCollector
   -> GithubSearchClient
@@ -56,6 +54,9 @@ HTTP Request
   -> RankingScore persistence
   -> DailyBriefingService
   -> Korean Markdown briefing file
+  -> MiniProjectQuestTemplate
+  -> MiniProjectSkeletonGenerator
+  -> generated quest file set with TODO-STUDENT boundaries
 ```
 
 The first data model is deliberately small:
@@ -114,6 +115,9 @@ src/main/java/com/questack
     config/
     schedule/
     service/
+  quest/
+    template/
+    generator/
   source/
     Source.java
     SourceRepository.java
@@ -258,7 +262,8 @@ Notes:
 - Cost guardrails limit daily GitHub collection, RSS collection, and future LLM request usage. The MVP default keeps LLM requests at `0` because Questack does not call an LLM yet.
 - The MVP RSS source set includes five configured technical blog feeds.
 - Daily briefing Markdown files are written under `docs/daily-briefings` by default.
-- `docs/daily-briefings/(sample)-2026-05-27.md` is a committed sample output file, not the default runtime filename.
+- Runtime briefing files under `docs/daily-briefings` are ignored by Git unless intentionally copied to `docs/samples`.
+- Committed sample output artifacts live under `docs/samples`.
 
 ## API
 
@@ -367,7 +372,7 @@ POST /briefings/daily?date=2026-05-27
 
 Generates a Korean Markdown briefing from the current Top 3 rankings and writes it to `docs/daily-briefings/{date}.md`.
 Each item includes a source-specific summary, importance explanation, practical backend interview question with a follow-up, 30-minute study path, and mini project idea.
-The repository includes `docs/daily-briefings/(sample)-2026-05-27.md` only as a sample output artifact.
+Committed sample briefing artifacts live under `docs/samples/daily-briefings`.
 
 Response:
 
@@ -404,6 +409,25 @@ Sample output artifacts:
 
 - `docs/samples`
 
+Portfolio samples:
+
+- `docs/samples/daily-briefings/(sample)-2026-05-29.md`: generated Top 3 briefing sample.
+- `docs/samples/mini-project-quests/spring-ai-rag-document-search`: generated mini-project quest skeleton sample.
+
+## Portfolio Demo Story
+
+Questack demonstrates one backend learning loop:
+
+1. Collect signals from GitHub Search and five RSS/Atom technical blog feeds.
+2. Normalize external data into `CollectedItem` and prevent duplicates by canonical URL.
+3. Rank backend relevance with deterministic keyword rules and labeled quality fixtures.
+4. Generate a Korean Top 3 daily briefing with interview angles and 30-minute study paths.
+5. Turn one selected topic into a junior-backend mini-project skeleton while leaving the learning-critical code as `TODO-STUDENT`.
+
+Interview self-introduction:
+
+> 매일 변화하는 백엔드/AI 기술을 자동 수집하고, 학습 가능한 미니 프로젝트로 변환하는 서비스를 만들어 보았습니다. GitHub와 기술 블로그 RSS를 같은 도메인 모델로 정규화하고, fixture replay 테스트와 비용 가드로 외부 의존성을 통제했습니다.
+
 Key current decisions:
 
 - Start with GitHub Search and curated technical blogs before social platforms.
@@ -433,17 +457,15 @@ PRs stay feature-oriented, but commits are split by reviewable intent. See `docs
 
 ## Roadmap
 
-Near-term:
+MVP completion:
 
-- Add fixture replay tests for GitHub collection.
-- Add fixture replay tests for RSS collection.
-
-Next:
-
-- Generate mini-project quests from selected topics.
-- Add `TODO-STUDENT` sections for user-written learning code.
-- Add GitHub/GitLab push checklist.
-- Add scheduling and cost guards.
+- GitHub and RSS fixture replay harness: done.
+- Top 3 ranking quality fixture: done.
+- Five RSS technical blog sources: done.
+- Mini-project quest template and skeleton generator: done.
+- Reliability behavior for source failures: done.
+- Daily automation and cost guardrails: done.
+- Portfolio sample briefing and mini-project quest artifacts: done.
 
 Later:
 
