@@ -17,4 +17,24 @@
 |`+Number+`
 |Number of feed items skipped because their canonical URL already exists or is blank.
 
+|`+failedFeedCount+`
+|`+Number+`
+|Number of feeds that failed while other feeds continued processing.
+
+|`+failedFeeds+`
+|`+Array+`
+|Failed feed details.
+
+|`+failedFeeds[].feedName+`
+|`+String+`
+|Configured name of the failed feed.
+
+|`+failedFeeds[].feedUrl+`
+|`+String+`
+|Configured URL of the failed feed.
+
+|`+failedFeeds[].reason+`
+|`+String+`
+|Failure reason captured from the feed request or parser.
+
 |===

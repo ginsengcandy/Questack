@@ -4,11 +4,13 @@ import com.questack.collection.CollectedItem;
 import com.questack.collection.CollectedItemRepository;
 import com.questack.collection.CollectedItemType;
 import com.questack.collection.rss.api.dto.RssCollectionResult;
+import com.questack.collection.rss.api.dto.RssFeedFailure;
 import com.questack.collection.rss.config.RssFeedProperties;
 import com.questack.collection.rss.config.RssProperties;
 import com.questack.source.Source;
 import com.questack.source.SourceRepository;
 import com.questack.source.SourceType;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -46,11 +48,18 @@ public class RssCollector {
         int fetchedCount = 0;
         int savedCount = 0;
         int skippedDuplicateCount = 0;
+        List<RssFeedFailure> failedFeeds = new ArrayList<>();
 
         for (RssFeedProperties feed : feeds) {
             Source source = sourceRepository.findByName(feed.name())
                     .orElseGet(() -> sourceRepository.save(new Source(feed.name(), SourceType.RSS, feed.url(), feed.priority())));
-            List<RssFeedItem> items = fetchItems(feed.url());
+            List<RssFeedItem> items;
+            try {
+                items = fetchItems(feed.url());
+            } catch (RuntimeException exception) {
+                failedFeeds.add(new RssFeedFailure(feed.name(), feed.url(), failureReason(exception)));
+                continue;
+            }
             fetchedCount += items.size();
 
             for (RssFeedItem item : items) {
@@ -73,7 +82,21 @@ public class RssCollector {
             }
         }
 
-        return new RssCollectionResult(feeds.size(), fetchedCount, savedCount, skippedDuplicateCount);
+        return new RssCollectionResult(
+                feeds.size(),
+                fetchedCount,
+                savedCount,
+                skippedDuplicateCount,
+                failedFeeds.size(),
+                failedFeeds
+        );
+    }
+
+    private String failureReason(RuntimeException exception) {
+        if (exception.getMessage() == null || exception.getMessage().isBlank()) {
+            return exception.getClass().getSimpleName();
+        }
+        return exception.getMessage();
     }
 
     private List<RssFeedItem> fetchItems(String feedUrl) {

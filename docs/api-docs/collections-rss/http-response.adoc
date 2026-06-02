@@ -2,12 +2,18 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 96
+Content-Length: 275
 
 {
   "feedCount" : 3,
   "fetchedCount" : 12,
   "savedCount" : 10,
-  "skippedDuplicateCount" : 2
+  "skippedDuplicateCount" : 2,
+  "failedFeedCount" : 1,
+  "failedFeeds" : [ {
+    "feedName" : "Broken Feed",
+    "feedUrl" : "https://example.com/broken.xml",
+    "reason" : "500 Internal Server Error"
+  } ]
 }
 ----

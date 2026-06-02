@@ -2,6 +2,7 @@ package com.questack.collection.rss.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import com.questack.collection.CollectedItem;
@@ -31,6 +32,7 @@ class RssCollectorReplayTest {
 
     private static final String RSS_FEED_URL = "https://feeds.example.com/backend.xml";
     private static final String ATOM_FEED_URL = "https://feeds.example.com/ai.atom";
+    private static final String BROKEN_FEED_URL = "https://feeds.example.com/broken.xml";
 
     @Autowired
     private SourceRepository sourceRepository;
@@ -75,6 +77,8 @@ class RssCollectorReplayTest {
         assertThat(result.fetchedCount()).isEqualTo(3);
         assertThat(result.savedCount()).isEqualTo(2);
         assertThat(result.skippedDuplicateCount()).isEqualTo(1);
+        assertThat(result.failedFeedCount()).isZero();
+        assertThat(result.failedFeeds()).isEmpty();
         server.verify();
 
         Source rssSource = sourceRepository.findByName("Backend Blog").orElseThrow();
@@ -123,14 +127,61 @@ class RssCollectorReplayTest {
         assertThat(secondRun.fetchedCount()).isEqualTo(3);
         assertThat(secondRun.savedCount()).isZero();
         assertThat(secondRun.skippedDuplicateCount()).isEqualTo(3);
+        assertThat(secondRun.failedFeedCount()).isZero();
+        assertThat(secondRun.failedFeeds()).isEmpty();
         assertThat(collectedItemRepository.count()).isEqualTo(2);
         assertThat(sourceRepository.count()).isEqualTo(2);
+        server.verify();
+    }
+
+    @Test
+    void isolatesOneFailedFeedAndContinuesCollectingOtherFeeds() throws Exception {
+        rssCollector = collectorWithFeeds(List.of(
+                new RssFeedProperties("Broken Blog", BROKEN_FEED_URL, 1),
+                new RssFeedProperties("Backend Blog", RSS_FEED_URL, 2),
+                new RssFeedProperties("AI Backend Blog", ATOM_FEED_URL, 3)
+        ));
+        server.expect(requestTo(BROKEN_FEED_URL)).andRespond(withServerError());
+        expectFeed(RSS_FEED_URL, "fixtures/rss/backend-blog-rss.xml");
+        expectFeed(ATOM_FEED_URL, "fixtures/rss/backend-blog-atom.xml");
+
+        RssCollectionResult result = rssCollector.collect();
+
+        assertThat(result.feedCount()).isEqualTo(3);
+        assertThat(result.fetchedCount()).isEqualTo(3);
+        assertThat(result.savedCount()).isEqualTo(2);
+        assertThat(result.skippedDuplicateCount()).isEqualTo(1);
+        assertThat(result.failedFeedCount()).isEqualTo(1);
+        assertThat(result.failedFeeds()).singleElement()
+                .satisfies(failure -> {
+                    assertThat(failure.feedName()).isEqualTo("Broken Blog");
+                    assertThat(failure.feedUrl()).isEqualTo(BROKEN_FEED_URL);
+                    assertThat(failure.reason()).isNotBlank();
+                });
+        assertThat(collectedItemRepository.findByCanonicalUrl("https://example.com/cache")).isPresent();
+        assertThat(collectedItemRepository.findByCanonicalUrl("https://example.com/spring-ai-rag")).isPresent();
         server.verify();
     }
 
     private void expectFeed(String feedUrl, String fixturePath) throws Exception {
         server.expect(requestTo(feedUrl))
                 .andRespond(withSuccess(fixture(fixturePath), MediaType.APPLICATION_XML));
+    }
+
+    private RssCollector collectorWithFeeds(List<RssFeedProperties> feeds) {
+        return new RssCollector(
+                new RssProperties(feeds),
+                new RssFeedParser(),
+                sourceRepository,
+                collectedItemRepository,
+                restClientBuilder()
+        );
+    }
+
+    private RestClient.Builder restClientBuilder() {
+        RestClient.Builder restClientBuilder = RestClient.builder();
+        server = MockRestServiceServer.bindTo(restClientBuilder).build();
+        return restClientBuilder;
     }
 
     private String fixture(String fixturePath) throws Exception {
