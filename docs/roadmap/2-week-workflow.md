@@ -166,11 +166,12 @@ Recommended baseline:
 
 ## Done Criteria
 
-- The service collects from at least GitHub and 5 technical blog sources.
-- The service produces exactly 3 backend-relevant daily issues.
-- The service creates one junior-backend interview-level mini project quest.
-- Technical decisions and troubleshooting notes exist as Markdown docs.
-- A replay harness can test collection/ranking without live API calls.
+- [x] The service collects from at least GitHub and 5 technical blog sources.
+- [x] The service produces exactly 3 backend-relevant daily issues.
+- [x] The service creates one junior-backend interview-level mini project quest.
+- [x] Technical decisions and troubleshooting notes exist as Markdown docs.
+- [x] A replay harness can test collection/ranking without live API calls.
+- [x] Portfolio sample artifacts exist under `docs/samples`.
 
 ## GitHub Tracking
 
@@ -182,15 +183,15 @@ Use milestone issues as the source of truth for remaining MVP implementation wor
 
 Recommended issue order:
 
-1. [#9 Add fixture replay tests for GitHub collection](https://github.com/ginsengcandy/Questack/issues/9)
-2. [#8 Add fixture replay tests for RSS collection](https://github.com/ginsengcandy/Questack/issues/8)
-3. [#7 Lock Top 3 ranking quality with labeled fixtures](https://github.com/ginsengcandy/Questack/issues/7)
-4. [#6 Expand technical blog RSS sources to at least five feeds](https://github.com/ginsengcandy/Questack/issues/6)
-5. [#13 Define mini project quest template](https://github.com/ginsengcandy/Questack/issues/13)
-6. [#11 Generate mini project skeletons with TODO-STUDENT sections](https://github.com/ginsengcandy/Questack/issues/11)
-7. [#10 Add reliability behavior for source failures](https://github.com/ginsengcandy/Questack/issues/10)
-8. [#12 Add automation and cost-control guardrails](https://github.com/ginsengcandy/Questack/issues/12)
-9. [#14 Prepare portfolio demo and retrospective artifacts](https://github.com/ginsengcandy/Questack/issues/14)
+1. [x] [#9 Add fixture replay tests for GitHub collection](https://github.com/ginsengcandy/Questack/issues/9)
+2. [x] [#8 Add fixture replay tests for RSS collection](https://github.com/ginsengcandy/Questack/issues/8)
+3. [x] [#7 Lock Top 3 ranking quality with labeled fixtures](https://github.com/ginsengcandy/Questack/issues/7)
+4. [x] [#6 Expand technical blog RSS sources to at least five feeds](https://github.com/ginsengcandy/Questack/issues/6)
+5. [x] [#13 Define mini project quest template](https://github.com/ginsengcandy/Questack/issues/13)
+6. [x] [#11 Generate mini project skeletons with TODO-STUDENT sections](https://github.com/ginsengcandy/Questack/issues/11)
+7. [x] [#10 Add reliability behavior for source failures](https://github.com/ginsengcandy/Questack/issues/10)
+8. [x] [#12 Add automation and cost-control guardrails](https://github.com/ginsengcandy/Questack/issues/12)
+9. [x] [#14 Prepare portfolio demo and retrospective artifacts](https://github.com/ginsengcandy/Questack/issues/14)
 
 Branch names should include the issue number when practical, for example:
 
