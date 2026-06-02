@@ -1,5 +1,7 @@
 # Questack
 
+Korean translation: [README.ko.md](README.ko.md). `README.md` is the single source of truth; the Korean version is a translation that should be updated whenever this file changes.
+
 Questack is a backend-focused study automation service.
 
 The name means **Quest + Stack**. The product idea is simple: collect backend and AI engineering signals every day, filter them for Java/Spring/backend relevance, and turn the useful ones into short learning quests and mini-projects.

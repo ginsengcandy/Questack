@@ -251,3 +251,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** `docs/daily-briefings`의 최신 파일을 그대로 커밋하는 방식 (런타임 산출물과 샘플 산출물의 경계가 흐려짐), README에 출력 예시를 길게 붙이는 방식 (README가 비대해지고 실제 skeleton 파일 구조를 보여주기 어려움), 별도 demo 디렉터리를 만드는 방식 (`docs` 아래 기존 문서/샘플 체계와 중복됨)
 
 **영향받는 문서 / 파일:** `README.md`, `docs/roadmap/2-week-workflow.md`, `docs/samples/daily-briefings/(sample)-2026-05-29.md`, `docs/samples/mini-project-quests/spring-ai-rag-document-search`
+
+## TD-026 / 2026-06-02: README.md를 단일 진실의 원천으로 두고 한국어 번역본을 유지
+
+**결정 내용:** 프로젝트의 primary README는 `README.md`로 유지하고, `README.ko.md`는 한국어 번역본으로만 관리한다. `README.md`의 사용자 가이드, API 설명, roadmap 상태, sample artifact 안내가 변경되면 같은 변경에서 `README.ko.md`도 동기화한다. 한국어 README에는 영문 원본과 모순되거나 독립적인 규칙을 추가하지 않는다.
+
+**이유 / 배경:** Questack은 포트폴리오 프로젝트이므로 영어 README는 외부 리뷰와 GitHub 기본 노출에 유리하고, 한국어 README는 국내 면접 및 학습 설명에 유용하다. 두 README가 독립적으로 진화하면 API 테스트 절차나 MVP 상태가 어긋날 수 있으므로, 영문 README를 단일 진실의 원천으로 두고 한국어 문서는 번역본으로 제한한다.
+
+**대안으로 고려했던 것:** README를 한국어로만 전환하는 방식 (GitHub 기본 노출과 외부 리뷰 접근성이 낮아짐), 두 README를 독립 문서로 운영하는 방식 (내용 drift 가능성이 큼), README 안에 영어와 한국어를 모두 넣는 방식 (문서가 길어지고 사용자 흐름이 산만해짐)
+
+**영향받는 문서 / 파일:** `README.md`, `README.ko.md`, `docs/working-guidelines.md`

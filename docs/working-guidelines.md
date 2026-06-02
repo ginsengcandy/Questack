@@ -22,12 +22,21 @@ The goal is to keep day-to-day development fast while making the project history
 ## Document Map
 
 - `README.md`: project overview, quick start, public API summary
+- `README.ko.md`: Korean translation of `README.md`; do not add independent content here
 - `docs/working-guidelines.md`: day-to-day development rules
 - `docs/technical-decisions.md`: append-only technical and workflow decisions
 - `docs/troubleshooting.md`: append-only issue investigation log
 - `docs/api-docs/index.md`: generated Spring REST Docs snippet index
 - `docs/samples`: committed sample output artifacts
 - `docs/daily-briefings`: runtime daily briefing output
+
+## README Localization
+
+- Treat `README.md` as the single source of truth.
+- Keep `README.ko.md` as a Korean translation only.
+- When changing `README.md`, update `README.ko.md` in the same change unless the edit is purely mechanical and does not affect readable content.
+- Do not introduce new project rules, API details, roadmap status, or troubleshooting guidance only in `README.ko.md`.
+- If `README.ko.md` appears out of sync, update it from the English README before adding new Korean-only wording.
 
 ## Controller Changes
 
@@ -106,6 +115,7 @@ Check:
 
 - No generated docs under `src/docs`
 - REST Docs snippets are under `docs/api-docs`
+- If `README.md` changed, `README.ko.md` reflects the same readable content
 - Sample outputs are under `docs/samples`
 - Runtime outputs are not accidentally committed unless intentionally marked as samples
 - Commit scope is small enough to review
