@@ -29,6 +29,16 @@ github:
 briefing:
   output-directory: docs/daily-briefings
 
+automation:
+  daily:
+    enabled: false
+    cron: "-"
+    github-per-page: 10
+  cost:
+    max-github-collection-runs-per-day: 1
+    max-rss-collection-runs-per-day: 1
+    max-llm-requests-per-day: 0
+
 rss:
   feeds:
     - name: Spring Blog

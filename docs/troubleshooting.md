@@ -113,3 +113,17 @@ This file is append-only. New entries use `TR-###` identifiers and should cross-
 **재발 방지:** 새 source adapter나 수집 orchestration을 추가할 때 하나의 source 실패가 전체 pipeline을 중단해야 하는지, 아니면 실패를 기록하고 계속 진행해야 하는지 명시한다. 다중 source 수집에서는 실패 격리와 실패 상세 노출을 기본값으로 둔다.
 
 **관련 항목:** `TD-023`
+
+## TR-009 / 2026-06-02: 테스트용 생성자 추가 후 Spring bean 생성 실패
+
+**증상:** `./gradlew test` 실행 중 여러 `@SpringBootTest`가 application context를 로드하지 못했다. 테스트 리포트에는 `Failed to instantiate [com.questack.automation.service.DailyAutomationBudgetGuard]: No default constructor found`와 `NoSuchMethodException: com.questack.automation.service.DailyAutomationBudgetGuard.<init>()`가 반복 출력됐다.
+
+**원인:** `DailyAutomationBudgetGuard`에 production용 생성자와 테스트용 `Clock` 주입 생성자가 함께 존재했지만, Spring이 어떤 생성자를 자동 주입해야 하는지 명확히 알 수 없었다. 단일 생성자일 때는 생략 가능하지만, 생성자가 둘 이상이면 주입 대상 생성자를 명시하는 편이 안전하다.
+
+**조사 과정:** 처음에는 `AutomationProperties` record 바인딩 문제로 의심했지만, 테스트 리포트의 직접 원인은 `DailyAutomationBudgetGuard` 기본 생성자 탐색이었다. 해당 클래스의 공개 생성자에 주입 의도를 명시한 뒤 전체 테스트가 통과했다.
+
+**해결:** `DailyAutomationBudgetGuard(AutomationProperties automationProperties)` 생성자에 `@Autowired`를 추가해 Spring DI 생성자를 명시했다. 테스트용 생성자는 package-private으로 유지해 단위 테스트에서만 고정 clock을 주입한다.
+
+**재발 방지:** Spring component에 테스트 편의를 위한 보조 생성자를 추가할 때는 production DI 생성자에 `@Autowired`를 명시한다. 또는 테스트 전용 factory/helper를 사용해 Spring이 관리하는 생성자 후보를 늘리지 않는다.
+
+**관련 항목:** `TD-024`
