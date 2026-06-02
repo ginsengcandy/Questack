@@ -49,3 +49,16 @@ Rendered quest Markdown uses these sections:
 6. TODO-STUDENT Boundaries
 
 This format is the contract for the later mini project skeleton generator.
+
+## Skeleton Generator Contract
+
+The skeleton generator turns one `MiniProjectQuestTemplate` into a deterministic project file set:
+
+- `build.gradle`
+- `README.md`
+- `acceptance-criteria.md`
+- `src/main/java/quest/{TemplateClassName}Quest.java`
+- `src/test/java/quest/{TemplateClassName}QuestTest.java`
+
+The generated starter code must leave learning-critical behavior unfinished with `TODO-STUDENT` and an `UnsupportedOperationException`.
+The generated test skeleton may point to the TODO boundary, but it must not solve the learning-critical behavior for the student.

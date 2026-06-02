@@ -211,3 +211,13 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **대안으로 고려했던 것:** project skeleton generator부터 구현하는 방식 (빠르게 결과물을 만들 수 있지만 학습 경계가 불명확해짐), Markdown 문서만으로 템플릿을 유지하는 방식 (가볍지만 코드 생성 계약을 테스트로 고정하기 어려움), LLM이 quest를 자유 형식으로 생성하게 하는 방식 (표현은 풍부하지만 MVP 단계에서는 재현성과 `TODO-STUDENT` 경계 보장이 약함)
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/quest/template/MiniProjectQuestTemplate.java`, `src/main/java/com/questack/quest/template/TodoStudentBoundary.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplates.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplateRenderer.java`, `src/test/java/com/questack/quest/template/MiniProjectQuestTemplateTest.java`, `docs/quest/mini-project-quest-template.md`, `README.md`
+
+## TD-022 / 2026-06-02: Mini project skeleton generator는 deterministic file set을 생성
+
+**결정 내용:** Mini project skeleton generator는 파일 시스템에 직접 쓰기 전에 `GeneratedQuestProject`와 `GeneratedQuestFile`로 deterministic file set을 생성한다. 기본 생성 파일은 `build.gradle`, `README.md`, `acceptance-criteria.md`, starter code, test skeleton이다. starter code는 학습 핵심 로직을 `TODO-STUDENT`와 `UnsupportedOperationException`으로 남기며, test skeleton은 TODO 경계를 가리키되 정답 구현을 포함하지 않는다.
+
+**이유 / 배경:** Questack은 mini project를 학습자가 직접 완성하는 형태로 제공해야 한다. generator가 곧바로 파일 시스템을 수정하거나 학습 핵심 로직을 구현하면 테스트와 리뷰가 어려워지고 `TODO-STUDENT` 경계가 흐려진다. 순수한 file set 생성 단계로 시작하면 출력 계약을 테스트로 고정하고, 이후 writer/API/샘플 artifact 생성으로 안전하게 확장할 수 있다.
+
+**대안으로 고려했던 것:** generator가 바로 디렉터리에 파일을 쓰는 방식 (사용은 빠르지만 테스트와 rollback이 어려움), README만 생성하는 방식 (미니 프로젝트 skeleton으로는 부족함), 완성된 예제 코드를 생성하는 방식 (학습자가 구현해야 할 핵심 경험을 빼앗음)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/quest/generator/GeneratedQuestProject.java`, `src/main/java/com/questack/quest/generator/GeneratedQuestFile.java`, `src/main/java/com/questack/quest/generator/MiniProjectSkeletonGenerator.java`, `src/test/java/com/questack/quest/generator/MiniProjectSkeletonGeneratorTest.java`, `docs/quest/mini-project-quest-template.md`
