@@ -203,6 +203,118 @@ Custom query:
 curl -s -X POST "http://127.0.0.1:8080/collections/github?query=language:Java%20topic:spring-boot%20stars:%3E=100%20fork:false&perPage=10"
 ```
 
+## MVP Manual Test Walkthrough
+
+Use this flow to test the completed MVP as a user. Keep `./gradlew bootRun` running in one terminal and run the `curl` commands in another terminal.
+
+### 1. Verify the App Is Running
+
+```bash
+curl -s http://127.0.0.1:8080/actuator/health
+```
+
+Expected response:
+
+```json
+{"status":"UP"}
+```
+
+### 2. Collect GitHub Signals
+
+```bash
+curl -s -X POST "http://127.0.0.1:8080/collections/github?perPage=5"
+```
+
+Expected result:
+
+- `fetchedCount` is the number of repositories returned by GitHub.
+- `savedCount` is the number of new `CollectedItem` records saved.
+- `skippedDuplicateCount` increases when the same canonical URL was already collected.
+
+### 3. Collect RSS/Atom Blog Signals
+
+```bash
+curl -s -X POST "http://127.0.0.1:8080/collections/rss"
+```
+
+Expected result:
+
+- `feedCount` should be `5` for the MVP source set.
+- `savedCount` should increase when new feed items are collected.
+- `failedFeedCount` may be greater than `0` if an external feed is temporarily unavailable, but healthy feeds should still be collected.
+- `failedFeeds` explains which feed failed and why.
+
+### 4. Rank the Collected Items
+
+```bash
+curl -s -X POST "http://127.0.0.1:8080/rankings"
+```
+
+Expected result:
+
+- `candidateCount` is the number of collected items without a ranking yet.
+- `scoredCount` is the number of items ranked in this run.
+- `skippedAlreadyScoredCount` increases if you run ranking again without new collected items.
+
+### 5. Read the Top 3 Backend Topics
+
+```bash
+curl -s "http://127.0.0.1:8080/rankings/top?limit=3"
+```
+
+Expected result:
+
+- The response is a JSON array with up to 3 ranked items.
+- Each item includes title, summary, canonical URL, score fields, total score, and ranking reasons.
+- Topics should be backend-career relevant, not frontend-only or hardware-heavy.
+
+### 6. Generate a Daily Briefing
+
+```bash
+curl -s -X POST "http://127.0.0.1:8080/briefings/daily?date=2026-06-02"
+```
+
+Expected result:
+
+- `itemCount` should be `3` after enough collected items have been ranked.
+- `filePath` should point to `docs/daily-briefings/2026-06-02.md`.
+- `markdown` should contain a Korean daily briefing with score tables, summaries, interview angles, study paths, and mini project ideas.
+
+Open the generated briefing file:
+
+```bash
+sed -n '1,220p' docs/daily-briefings/2026-06-02.md
+```
+
+`docs/daily-briefings` is a runtime output directory and is ignored by Git. Committed examples are kept under `docs/samples/daily-briefings`.
+
+### 7. Inspect the Mini Project Quest Sample
+
+The MVP skeleton generator currently produces deterministic file sets in code and the portfolio sample shows what a generated quest looks like:
+
+```bash
+find docs/samples/mini-project-quests/spring-ai-rag-document-search -type f | sort
+sed -n '1,220p' docs/samples/mini-project-quests/spring-ai-rag-document-search/README.md
+```
+
+Expected result:
+
+- The sample includes `README.md`, `acceptance-criteria.md`, `build.gradle`, starter code, and a test skeleton.
+- The learning-critical logic is intentionally left as `TODO-STUDENT`.
+- The sample demonstrates how one ranked AI/backend topic becomes a junior-backend interview-level hands-on quest.
+
+### 8. Optional: Smoke Test Daily Automation
+
+Daily automation is disabled by default. To smoke test the scheduler locally, stop the running app and start it with automation enabled and a once-per-minute cron:
+
+```bash
+AUTOMATION_DAILY_ENABLED=true AUTOMATION_DAILY_CRON="0 * * * * *" ./gradlew bootRun
+```
+
+Wait for the next minute boundary, then check whether a briefing for today's date was created under `docs/daily-briefings`.
+
+The default budget allows one GitHub collection run and one RSS collection run per day, and keeps LLM requests at `0` because the MVP does not call an LLM.
+
 ## Configuration
 
 `src/main/resources/application.yaml`
