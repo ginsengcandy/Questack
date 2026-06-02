@@ -19,13 +19,13 @@ Implemented:
 - Keyword-based backend relevance ranking
 - Korean daily briefing Markdown generation from Top 3 rankings
 - Manual collection endpoint for local verification
+- Disabled-by-default daily automation pipeline with daily cost guardrails
 - Technical decision and troubleshooting logs under `docs/`
 
 Planned:
 
 - Mini-project quest generation with `TODO-STUDENT` sections
-- Replay harness for fixture-based collector tests
-- Cost and rate-limit guardrails
+- Portfolio demo and retrospective artifacts
 
 ## Why This Exists
 
@@ -109,6 +109,10 @@ src/main/java/com/questack
   briefing/
     api/
     config/
+    service/
+  automation/
+    config/
+    schedule/
     service/
   source/
     Source.java
@@ -233,13 +237,25 @@ rss:
 
 briefing:
   output-directory: docs/daily-briefings
+
+automation:
+  daily:
+    enabled: false
+    cron: "-"
+    github-per-page: 10
+  cost:
+    max-github-collection-runs-per-day: 1
+    max-rss-collection-runs-per-day: 1
+    max-llm-requests-per-day: 0
 ```
 
 Notes:
 
 - H2 is used for the MVP to keep local iteration fast.
 - `open-in-view` is disabled to keep persistence access inside explicit service boundaries.
-- GitHub and RSS collection are triggered manually for now. Scheduling will be added after ranking and replay tests are in place.
+- GitHub and RSS collection can still be triggered manually through collection endpoints.
+- Daily automation is disabled by default. Set `automation.daily.enabled=true` and provide a cron expression to run collection, ranking, and briefing generation on a schedule.
+- Cost guardrails limit daily GitHub collection, RSS collection, and future LLM request usage. The MVP default keeps LLM requests at `0` because Questack does not call an LLM yet.
 - The MVP RSS source set includes five configured technical blog feeds.
 - Daily briefing Markdown files are written under `docs/daily-briefings` by default.
 - `docs/daily-briefings/(sample)-2026-05-27.md` is a committed sample output file, not the default runtime filename.

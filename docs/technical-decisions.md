@@ -212,8 +212,6 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 
 **영향받는 문서 / 파일:** `src/main/java/com/questack/quest/template/MiniProjectQuestTemplate.java`, `src/main/java/com/questack/quest/template/TodoStudentBoundary.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplates.java`, `src/main/java/com/questack/quest/template/MiniProjectQuestTemplateRenderer.java`, `src/test/java/com/questack/quest/template/MiniProjectQuestTemplateTest.java`, `docs/quest/mini-project-quest-template.md`, `README.md`
 
-**영향받는 문서 / 파일:** `src/main/java/com/questack/collection/rss/service/RssCollector.java`, `src/main/java/com/questack/collection/rss/api/dto/RssCollectionResult.java`, `src/main/java/com/questack/collection/rss/api/dto/RssFeedFailure.java`, `src/test/java/com/questack/collection/rss/service/RssCollectorReplayTest.java`, `src/test/java/com/questack/collection/rss/api/RssCollectionControllerTest.java`, `README.md`
-
 ## TD-022 / 2026-06-02: Mini project skeleton generator는 deterministic file set을 생성
 
 **결정 내용:** Mini project skeleton generator는 파일 시스템에 직접 쓰기 전에 `GeneratedQuestProject`와 `GeneratedQuestFile`로 deterministic file set을 생성한다. 기본 생성 파일은 `build.gradle`, `README.md`, `acceptance-criteria.md`, starter code, test skeleton이다. starter code는 학습 핵심 로직을 `TODO-STUDENT`와 `UnsupportedOperationException`으로 남기며, test skeleton은 TODO 경계를 가리키되 정답 구현을 포함하지 않는다.
@@ -231,3 +229,15 @@ This file is append-only. New entries use `TD-###` identifiers and should be ref
 **이유 / 배경:** Questack은 여러 외부 source를 수집하므로 한 source의 일시 장애가 전체 학습 소재 수집을 막아서는 안 된다. 특히 RSS feed는 외부 블로그 운영 상태에 영향을 받기 쉽다. 실패를 숨기지 않고 응답에 노출하면 수동 검증과 이후 스케줄러/알림에서 원인을 추적할 수 있다.
 
 **대안으로 고려했던 것:** 하나의 feed 실패 시 전체 요청을 500으로 실패시키는 방식 (문제가 명확하지만 다른 정상 feed의 유용한 결과까지 잃음), 실패 feed를 조용히 skip하는 방식 (사용자는 누락 원인을 알 수 없음), 즉시 retry를 추가하는 방식 (좋지만 MVP에서는 실패 격리와 관측 가능성을 먼저 확보하는 편이 단순함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/collection/rss/service/RssCollector.java`, `src/main/java/com/questack/collection/rss/api/dto/RssCollectionResult.java`, `src/main/java/com/questack/collection/rss/api/dto/RssFeedFailure.java`, `src/test/java/com/questack/collection/rss/service/RssCollectorReplayTest.java`, `src/test/java/com/questack/collection/rss/api/RssCollectionControllerTest.java`, `README.md`
+
+## TD-024 / 2026-06-02: Daily automation은 기본 비활성화하고 일일 예산 가드로 보호
+
+**결정 내용:** Questack의 daily automation은 `automation.daily.enabled=false`와 `automation.daily.cron=-`를 기본값으로 두어 명시적으로 켜기 전에는 실행되지 않게 한다. 스케줄러가 실행되면 GitHub 수집, RSS 수집, 랭킹, 브리핑 생성을 순서대로 호출한다. 외부 호출 가능성이 있는 단계는 `DailyAutomationBudgetGuard`가 일일 사용량을 확인하며, MVP 기본값은 GitHub 수집 1회, RSS 수집 1회, LLM 요청 0회로 둔다.
+
+**이유 / 배경:** Week 2 automation은 수동 파이프라인을 운영 가능한 형태로 연결하는 단계지만, 프로젝트는 아직 로컬 MVP이며 LLM도 사용하지 않는다. 기본 자동 실행을 켜두면 개발 중 GitHub/RSS 호출이 의도치 않게 발생할 수 있고, 미래에 LLM을 붙일 때 비용 통제가 늦어질 수 있다. 따라서 스케줄링 진입점은 마련하되 기본은 비활성화하고, 비용이 발생할 수 있는 작업은 먼저 예산 가드를 통과하도록 한다.
+
+**대안으로 고려했던 것:** 애플리케이션 시작 직후 자동 실행하는 방식 (개발 중 외부 호출이 예측하기 어려움), 수동 API만 유지하는 방식 (Week 2 automation 목표를 충족하지 못함), LLM 비용 가드를 LLM 도입 시점까지 미루는 방식 (나중에 정책을 끼워 넣기보다 기본값 0으로 계약을 먼저 고정하는 편이 안전함)
+
+**영향받는 문서 / 파일:** `src/main/java/com/questack/QuestackApplication.java`, `src/main/java/com/questack/automation/config/AutomationProperties.java`, `src/main/java/com/questack/automation/schedule/DailyAutomationScheduler.java`, `src/main/java/com/questack/automation/service/DailyAutomationService.java`, `src/main/java/com/questack/automation/service/DailyAutomationBudgetGuard.java`, `src/main/resources/application.yaml`, `README.md`
