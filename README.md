@@ -283,12 +283,22 @@ Response:
 
 ```json
 {
-  "feedCount": 3,
+  "feedCount": 5,
   "fetchedCount": 12,
   "savedCount": 10,
-  "skippedDuplicateCount": 2
+  "skippedDuplicateCount": 2,
+  "failedFeedCount": 1,
+  "failedFeeds": [
+    {
+      "feedName": "Broken Feed",
+      "feedUrl": "https://example.com/broken.xml",
+      "reason": "500 Internal Server Error"
+    }
+  ]
 }
 ```
+
+If one configured feed fails, Questack records it in `failedFeeds` and continues collecting from the remaining feeds.
 
 ### Rank Collected Items
 

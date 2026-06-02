@@ -99,3 +99,17 @@ This file is append-only. New entries use `TR-###` identifiers and should cross-
 **재발 방지:** 같은 테스트 안에서 `MockRestServiceServer`를 여러 replay 구간으로 사용할 때는 각 구간마다 expectation 등록, 실행, verify, reset 순서를 명확히 분리한다.
 
 **관련 항목:** `TD-018`
+
+## TR-008 / 2026-06-02: RSS feed 하나가 실패하면 전체 수집 결과를 잃을 수 있음
+
+**증상:** RSS 수집은 여러 feed를 순회하지만, 기존 구조에서는 `fetchItems(feed.url())`에서 RuntimeException이 발생하면 해당 요청 전체가 중단될 수 있었다. 이 경우 정상 feed에서 얻을 수 있는 학습 소재까지 저장되지 않는다.
+
+**원인:** feed별 실패 격리 경계가 없었다. 외부 RSS feed는 일시적인 HTTP 오류, 빈 응답, XML parse 오류가 발생할 수 있는데, 수집기는 feed 단위로 실패를 관측하고 계속 진행하는 정책을 갖고 있지 않았다.
+
+**조사 과정:** `RssCollectorReplayTest`에 server error를 반환하는 broken feed와 정상 RSS/Atom fixture를 함께 배치했다. broken feed가 있어도 정상 feed가 저장되어야 한다는 기대를 테스트로 고정했다.
+
+**해결:** `RssCollector`가 feed별 `RuntimeException`을 잡아 `RssFeedFailure`로 기록하고 다음 feed 수집을 계속하도록 변경했다. `RssCollectionResult`에는 `failedFeedCount`와 `failedFeeds`를 추가해 수동 검증과 이후 자동화에서 실패 source를 확인할 수 있게 했다.
+
+**재발 방지:** 새 source adapter나 수집 orchestration을 추가할 때 하나의 source 실패가 전체 pipeline을 중단해야 하는지, 아니면 실패를 기록하고 계속 진행해야 하는지 명시한다. 다중 source 수집에서는 실패 격리와 실패 상세 노출을 기본값으로 둔다.
+
+**관련 항목:** `TD-023`
