@@ -366,6 +366,7 @@ Planning documents:
 
 - `docs/roadmap/2-week-workflow.md`
 - `docs/sources/source-candidates.md`
+- `docs/quest/mini-project-quest-template.md`
 
 Generated API snippets:
 
@@ -385,6 +386,7 @@ Key current decisions:
 - Keep ranking in a separate `RankingScore` model.
 - Start ranking with deterministic keyword rules before LLM-based summarization.
 - Generate daily briefings as Markdown files before introducing a separate briefing table.
+- Define mini-project quests with explicit `TODO-STUDENT` learning boundaries before generating project skeletons.
 - Use Spring `RestClient` for simple synchronous external HTTP calls.
 - Keep GitHub collector code grouped by feature and separated internally by role.
 - Keep controller behavior covered by MockMvc REST Docs tests.
